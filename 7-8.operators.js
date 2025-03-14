@@ -303,10 +303,103 @@ console.log("Tarefas importantes:", tarefasImportantes);
 console.log("Tarefas pendentes:", tarefasPendentes);
 console.log("Tarefas importantes pendentes:", tarefasImportantesPendentes);
 
-// ----- Desafios para os Alunos -----
+// ----- Desafios para os alunos -----
+
 /*
-1. Escreva uma função que calcula a prioridade média das tarefas.
-2. Implemente uma função para ordenar tarefas por prioridade (decrescente) e, em caso de empate, por título (alfabético).
-3. Crie uma função que use operadores lógicos para verificar se uma tarefa precisa de atenção (não concluída e alta prioridade ou prazo próximo).
-4. Implemente uma função que use o operador spread para mesclar várias listas de tarefas, garantindo que IDs duplicados sejam resolvidos.
+1. Crie uma função para calcular o preço total de uma tarefa considerando o preço base e o número de horas necessárias para completá-la. Cada hora adicional custa 10% do preço base.
+
+Resolução:
+function calcularPrecoTotal(precoBase, horas) {
+    // Calcula o preço da hora adicional (10% do preço base)
+    let precoHoraAdicional = precoBase * 0.1;
+    
+    // Calcula o preço total: preço base + (horas * preço hora adicional)
+    let precoTotal = precoBase + (horas * precoHoraAdicional);
+    
+    return precoTotal;
+}
+
+// Exemplos de uso:
+let preco1 = calcularPrecoTotal(100, 5); // 100 + (5 * 10) = 150
+console.log("Preço total para 5 horas:", preco1);
+
+let preco2 = calcularPrecoTotal(200, 3); // 200 + (3 * 20) = 260
+console.log("Preço total para 3 horas:", preco2);
+
+
+2. Crie uma função que verifique se uma tarefa está atrasada, comparando a data de vencimento com a data atual. Utilize operadores de comparação.
+
+Resolução:
+function verificarAtraso(dataVencimento) {
+    // Cria um objeto Date para a data atual
+    let hoje = new Date();
+    
+    // Converte a string de data em um objeto Date
+    let dataLimite = new Date(dataVencimento);
+    
+    // Compara as datas - true se estiver atrasada, false caso contrário
+    return hoje > dataLimite;
+}
+
+// Exemplos de uso:
+let atrasada = verificarAtraso("2023-01-01");
+console.log("A tarefa está atrasada?", atrasada); // Provavelmente true
+
+let emDia = verificarAtraso("2026-01-01");
+console.log("A tarefa está atrasada?", emDia); // Provavelmente false
+
+
+3. Crie uma função para incrementar a prioridade de uma tarefa até um valor máximo de 5.
+
+Resolução:
+function aumentarPrioridade(prioridadeAtual) {
+    // Usando operador de pré-incremento
+    let novaPrioridade = ++prioridadeAtual;
+    
+    // Usando operador ternário para limitar o valor máximo
+    novaPrioridade = novaPrioridade > 5 ? 5 : novaPrioridade;
+    
+    return novaPrioridade;
+}
+
+// Exemplos de uso:
+let prioridade1 = 3;
+console.log("Prioridade original:", prioridade1);
+console.log("Nova prioridade:", aumentarPrioridade(prioridade1));
+
+let prioridade2 = 5;
+console.log("Prioridade original:", prioridade2);
+console.log("Nova prioridade:", aumentarPrioridade(prioridade2)); // Deve permanecer 5
+
+
+4. Crie uma função que retorne o status de uma tarefa baseado em sua conclusão, utilizando o operador ternário.
+
+Resolução:
+function statusTarefa(concluida) {
+    // Usando operador ternário para determinar o status
+    return concluida ? "Concluída" : "Pendente";
+}
+
+// Exemplos de uso:
+console.log("Status da tarefa 1:", statusTarefa(true));  // Concluída
+console.log("Status da tarefa 2:", statusTarefa(false)); // Pendente
+
+
+5. Crie uma função que retorne se uma tarefa é importante com base em sua prioridade e prazo. Uma tarefa é importante se tiver prioridade maior que 3 OU estiver a menos de 2 dias do prazo.
+
+Resolução:
+function tarefaImportante(prioridade, diasParaPrazo) {
+    // Usa operador lógico OR (||) para verificar as condições
+    return prioridade > 3 || diasParaPrazo < 2;
+}
+
+// Exemplos de uso:
+console.log("Tarefa com prioridade 4 e 5 dias para o prazo é importante?", 
+            tarefaImportante(4, 5)); // true, pela prioridade
+
+console.log("Tarefa com prioridade 2 e 1 dia para o prazo é importante?", 
+            tarefaImportante(2, 1)); // true, pelo prazo
+
+console.log("Tarefa com prioridade 2 e 5 dias para o prazo é importante?", 
+            tarefaImportante(2, 5)); // false, nem prioridade nem prazo
 */

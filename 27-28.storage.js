@@ -570,3 +570,152 @@ console.log("\nDemonstrando armazenamento seguro de token:");
 saveTemporaryToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...", 30);
 console.log("Token salvo com expiração de 30 minutos");
 console.log("Token recuperado:", getToken());
+
+// ----- Exercícios para os Alunos -----
+/*
+EXERCÍCIO 1:
+Crie uma função que salve o nome do usuário no localStorage.
+
+Resolução:
+function salvarNomeUsuario(nome) {
+    if (!nome || nome.trim() === "") {
+        console.error("Nome de usuário inválido");
+        return false;
+    }
+    
+    try {
+        localStorage.setItem("usuario_nome", nome);
+        return true;
+    } catch (erro) {
+        console.error("Erro ao salvar nome de usuário:", erro);
+        return false;
+    }
+}
+
+// Exemplo de uso
+const sucesso = salvarNomeUsuario("Maria Silva");
+console.log("Nome salvo com sucesso?", sucesso);
+*/
+
+/*
+EXERCÍCIO 2:
+Crie uma função que recupere o nome do usuário do localStorage e exiba uma saudação.
+
+Resolução:
+function exibirSaudacao() {
+    const nome = localStorage.getItem("usuario_nome");
+    
+    if (!nome) {
+        return "Olá, visitante!";
+    }
+    
+    const horaAtual = new Date().getHours();
+    
+    if (horaAtual < 12) {
+        return `Bom dia, ${nome}!`;
+    } else if (horaAtual < 18) {
+        return `Boa tarde, ${nome}!`;
+    } else {
+        return `Boa noite, ${nome}!`;
+    }
+}
+
+console.log(exibirSaudacao());
+*/
+
+/*
+EXERCÍCIO 3:
+Crie um contador que incremente cada vez que a página é carregada, usando localStorage.
+
+Resolução:
+function incrementarContador() {
+    // Obter valor atual ou iniciar em 0
+    let contador = localStorage.getItem("contador_visitas");
+    
+    // Se não existir, inicializa com 0
+    if (contador === null) {
+        contador = 0;
+    } else {
+        // Converter string para número
+        contador = parseInt(contador, 10);
+    }
+    
+    // Incrementar contador
+    contador++;
+    
+    // Salvar contador atualizado
+    localStorage.setItem("contador_visitas", contador.toString());
+    
+    return contador;
+}
+
+const visitaNumero = incrementarContador();
+console.log(`Esta é a sua visita número ${visitaNumero}!`);
+*/
+
+/*
+EXERCÍCIO 4:
+Crie um sistema simples para salvar e visualizar notas, usando localStorage.
+
+Resolução:
+const NotasApp = {
+    // Obter todas as notas
+    obterNotas: function() {
+        const notasString = localStorage.getItem("minhas_notas");
+        return notasString ? JSON.parse(notasString) : [];
+    },
+    
+    // Adicionar uma nova nota
+    adicionarNota: function(texto) {
+        if (!texto || texto.trim() === "") {
+            return false;
+        }
+        
+        // Obter notas existentes
+        const notas = this.obterNotas();
+        
+        // Adicionar nova nota
+        notas.push({
+            id: Date.now(),
+            texto: texto,
+            data: new Date().toISOString()
+        });
+        
+        // Salvar notas atualizadas
+        localStorage.setItem("minhas_notas", JSON.stringify(notas));
+        return true;
+    },
+    
+    // Remover uma nota pelo ID
+    removerNota: function(id) {
+        const notas = this.obterNotas();
+        const novasNotas = notas.filter(nota => nota.id !== id);
+        
+        if (notas.length !== novasNotas.length) {
+            localStorage.setItem("minhas_notas", JSON.stringify(novasNotas));
+            return true;
+        }
+        
+        return false;
+    },
+    
+    // Listar todas as notas
+    listarNotas: function() {
+        const notas = this.obterNotas();
+        
+        if (notas.length === 0) {
+            return "Nenhuma nota encontrada.";
+        }
+        
+        return notas.map(nota => {
+            const data = new Date(nota.data);
+            return `[${data.toLocaleDateString()}] ${nota.texto}`;
+        }).join("\n");
+    }
+};
+
+// Demonstração
+NotasApp.adicionarNota("Aprender sobre localStorage");
+NotasApp.adicionarNota("Revisar exercícios de JavaScript");
+console.log("\nMinhas notas:\n" + NotasApp.listarNotas());
+*/

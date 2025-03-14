@@ -366,3 +366,163 @@ function converterISOParaDate(isoString) {
 const dataParaArmazenar = formatarDataParaArmazenamento(new Date());
 console.log("\nData formatada para armazenamento:", dataParaArmazenar);
 console.log("Data convertida de volta:", converterISOParaDate(dataParaArmazenar));
+
+// ----- Exercícios Práticos -----
+/*
+EXERCÍCIO 1:
+Crie uma função que exiba a data atual no formato "DD/MM/AAAA".
+
+Resolução:
+function exibirDataAtual() {
+    const hoje = new Date();
+    
+    // Obter componentes da data
+    const dia = hoje.getDate().toString().padStart(2, '0');
+    const mes = (hoje.getMonth() + 1).toString().padStart(2, '0'); // +1 porque mês começa em 0
+    const ano = hoje.getFullYear();
+    
+    // Formatar a data
+    return `${dia}/${mes}/${ano}`;
+}
+
+console.log("Data atual:", exibirDataAtual());
+*/
+
+/*
+EXERCÍCIO 2:
+Calcule quantos dias faltam para o Natal deste ano.
+
+Resolução:
+function diasAteNatal() {
+    const hoje = new Date();
+    
+    // Criar data do Natal deste ano
+    const natal = new Date(hoje.getFullYear(), 11, 25); // 25 de dezembro
+    
+    // Se o Natal já passou este ano, usar o Natal do próximo ano
+    if (hoje > natal) {
+        natal.setFullYear(natal.getFullYear() + 1);
+    }
+    
+    // Cálculo da diferença em dias
+    const diferencaMs = natal - hoje;
+    const diferencaDias = Math.ceil(diferencaMs / (1000 * 60 * 60 * 24));
+    
+    return diferencaDias;
+}
+
+console.log("Dias até o Natal:", diasAteNatal());
+*/
+
+/*
+EXERCÍCIO 3:
+Crie uma função que determine se um ano informado é bissexto.
+
+Resolução:
+function verificarAnoBissexto(ano) {
+    // Um ano é bissexto se for divisível por 4
+    // Mas não é bissexto se for divisível por 100, a menos que seja divisível por 400
+    if ((ano % 4 === 0 && ano % 100 !== 0) || ano % 400 === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+console.log("2024 é bissexto?", verificarAnoBissexto(2024)); // true
+console.log("2023 é bissexto?", verificarAnoBissexto(2023)); // false
+console.log("2000 é bissexto?", verificarAnoBissexto(2000)); // true
+console.log("1900 é bissexto?", verificarAnoBissexto(1900)); // false
+*/
+
+/*
+EXERCÍCIO 4:
+Crie uma função que retorne o nome do mês atual por extenso.
+
+Resolução:
+function obterNomeMesAtual() {
+    const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    
+    const hoje = new Date();
+    const indiceMes = hoje.getMonth(); // 0 a 11
+    
+    return meses[indiceMes];
+}
+
+console.log("Mês atual:", obterNomeMesAtual());
+*/
+
+/*
+EXERCÍCIO 5:
+Implemente uma função que calcule a diferença em dias entre duas datas.
+
+Resolução:
+function calcularDiferencaDias(data1, data2) {
+    // Converter para objetos Date se forem strings
+    if (typeof data1 === 'string') {
+        data1 = new Date(data1);
+    }
+    
+    if (typeof data2 === 'string') {
+        data2 = new Date(data2);
+    }
+    
+    // Remover as horas para comparar apenas os dias
+    const data1SemHora = new Date(data1);
+    data1SemHora.setHours(0, 0, 0, 0);
+    
+    const data2SemHora = new Date(data2);
+    data2SemHora.setHours(0, 0, 0, 0);
+    
+    // Calcular a diferença em milissegundos
+    const diferencaMs = Math.abs(data2SemHora - data1SemHora);
+    
+    // Converter para dias
+    const diferencaDias = Math.round(diferencaMs / (1000 * 60 * 60 * 24));
+    
+    return diferencaDias;
+}
+
+const data1 = new Date(2025, 0, 1);  // 01/01/2025
+const data2 = new Date(2025, 0, 15); // 15/01/2025
+
+console.log(`Diferença entre ${formatarData(data1)} e ${formatarData(data2)}:`, 
+            calcularDiferencaDias(data1, data2), "dias");
+*/
+
+/*
+EXERCÍCIO 6:
+Crie uma função que formata uma data no padrão "Dia da semana, DD de Mês de AAAA".
+Exemplo: "Sexta-feira, 15 de Junho de 2025".
+
+Resolução:
+function formatarDataExtenso(data) {
+    // Converter para objeto Date se for string
+    if (typeof data === 'string') {
+        data = new Date(data);
+    }
+    
+    const diasSemana = [
+        'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira',
+        'Quinta-feira', 'Sexta-feira', 'Sábado'
+    ];
+    
+    const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    
+    const diaSemana = diasSemana[data.getDay()];
+    const dia = data.getDate();
+    const mes = meses[data.getMonth()];
+    const ano = data.getFullYear();
+    
+    return `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+}
+
+const dataExemplo = new Date(2025, 5, 15); // 15/06/2025
+console.log("Data por extenso:", formatarDataExtenso(dataExemplo));
+*/

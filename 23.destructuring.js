@@ -354,3 +354,318 @@ function criarTarefa(titulo, descricao, prioridade = "média") {
 const novaTarefa = criarTarefa("Aprender desestruturação", "Estudar sintaxe e aplicações", "alta");
 console.log("\nNova tarefa criada com shorthand properties:");
 console.log(novaTarefa);
+
+// ----- Exercícios Práticos -----
+
+/*
+EXERCÍCIO 1:
+Crie uma função chamada extrairInfoTarefa que receba um objeto tarefa e use desestruturação para extrair e retornar apenas o título, a prioridade e o status de conclusão.
+
+Resolução:
+function extrairInfoTarefa(tarefa) {
+    // Usando desestruturação para extrair apenas as propriedades desejadas
+    const { titulo, prioridade, concluida } = tarefa;
+    
+    // Retornando um novo objeto com as propriedades extraídas
+    return { titulo, prioridade, concluida };
+}
+
+// Exemplo de uso
+const tarefa = {
+    id: 1,
+    titulo: "Estudar JavaScript",
+    descricao: "Aprofundar conhecimentos em JS",
+    prioridade: "alta",
+    concluida: false,
+    criador: "João",
+    dataCriacao: new Date(2025, 3, 15)
+};
+
+const infoResumida = extrairInfoTarefa(tarefa);
+console.log("Informações extraídas da tarefa:", infoResumida);
+// Saída: { titulo: "Estudar JavaScript", prioridade: "alta", concluida: false }
+*/
+
+/*
+EXERCÍCIO 2:
+Crie uma função formatarUsuario que receba um array com dados de um usuário na ordem [nome, email, idade, cidade] e utilize desestruturação para retornar um objeto formatado.
+
+Resolução:
+function formatarUsuario(dadosUsuario) {
+    // Desestruturação do array com valores padrão
+    const [nome, email, idade = 'Não informada', cidade = 'Não informada'] = dadosUsuario;
+    
+    // Retornando um objeto formatado usando property shorthand
+    return {
+        nome,
+        email,
+        idade,
+        cidade,
+        resumo: `${nome}, ${idade} anos, mora em ${cidade}`
+    };
+}
+
+// Exemplos de uso
+const usuario1 = ["Maria Silva", "maria@email.com", 28, "São Paulo"];
+console.log("Usuário 1:", formatarUsuario(usuario1));
+// Saída completa com todos os dados
+
+const usuario2 = ["João Santos", "joao@email.com"]; // Sem idade e cidade
+console.log("Usuário 2:", formatarUsuario(usuario2));
+// Saída usando valores padrão para idade e cidade
+*/
+
+/*
+EXERCÍCIO 3:
+Refatore a função analisarProjeto para usar desestruturação de objetos aninhados, extraindo nome do projeto, status, nome do responsável e prazo.
+
+Resolução:
+// Versão original da função, sem desestruturação
+function analisarProjetoAntigo(projeto) {
+    const nomeProjeto = projeto.nome;
+    const statusProjeto = projeto.status || "Em andamento";
+    const nomeResponsavel = projeto.responsavel ? projeto.responsavel.nome : "Não atribuído";
+    const emailResponsavel = projeto.responsavel ? projeto.responsavel.email : "N/A";
+    const prazoFinal = projeto.prazos && projeto.prazos.final ? projeto.prazos.final : "Indefinido";
+    
+    return {
+        projeto: nomeProjeto,
+        status: statusProjeto,
+        responsavel: nomeResponsavel,
+        email: emailResponsavel,
+        prazo: prazoFinal
+    };
+}
+
+// Versão refatorada usando desestruturação
+function analisarProjeto({
+    nome,
+    status = "Em andamento",
+    responsavel: { nome: nomeResponsavel = "Não atribuído", email: emailResponsavel = "N/A" } = {},
+    prazos: { final: prazoFinal = "Indefinido" } = {}
+}) {
+    return {
+        projeto: nome,
+        status,
+        responsavel: nomeResponsavel,
+        email: emailResponsavel,
+        prazo: prazoFinal
+    };
+}
+
+// Exemplos de uso
+const projeto1 = {
+    nome: "TaskMaster Web",
+    status: "Em desenvolvimento",
+    responsavel: {
+        nome: "Ana Carolina",
+        email: "ana@empresa.com"
+    },
+    prazos: {
+        inicio: new Date(2025, 0, 15),
+        final: new Date(2025, 5, 30)
+    }
+};
+
+console.log("Análise do projeto 1:", analisarProjeto(projeto1));
+
+// Projeto com dados incompletos para testar valores padrão
+const projeto2 = {
+    nome: "API TaskMaster",
+    responsavel: {
+        nome: "Carlos Eduardo"
+        // sem email
+    }
+    // sem prazo
+};
+
+console.log("Análise do projeto 2:", analisarProjeto(projeto2));
+
+// Projeto com mínimo de dados
+const projeto3 = {
+    nome: "TaskMaster Mobile"
+    // sem status, responsável ou prazos
+};
+
+console.log("Análise do projeto 3:", analisarProjeto(projeto3));
+*/
+
+/*
+EXERCÍCIO 4:
+Implemente uma função processarTarefas que receba um array de tarefas e utilize desestruturação em conjunto com métodos de array para gerar estatísticas.
+
+Resolução:
+function processarTarefas(tarefas) {
+    // Usar map com desestruturação para extrair apenas o que precisamos
+    const resumos = tarefas.map(({ id, titulo, prioridade, concluida, prazo }) => {
+        // Verificar se prazo está definido e se já passou
+        const hoje = new Date();
+        const temPrazo = prazo instanceof Date;
+        const atrasada = temPrazo && prazo < hoje && !concluida;
+        
+        return {
+            id,
+            titulo,
+            prioridade,
+            status: concluida ? "Concluída" : atrasada ? "Atrasada" : "Pendente",
+            diasRestantes: temPrazo ? Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24)) : null
+        };
+    });
+    
+    // Usar reduce com desestruturação para gerar estatísticas
+    const estatisticas = tarefas.reduce((stats, { prioridade, concluida, prazo }) => {
+        // Atualizar contagem por prioridade
+        stats.porPrioridade[prioridade] = (stats.porPrioridade[prioridade] || 0) + 1;
+        
+        // Atualizar contagem por status
+        if (concluida) {
+            stats.concluidas++;
+        } else {
+            stats.pendentes++;
+            
+            // Verificar se está atrasada
+            if (prazo instanceof Date && prazo < new Date()) {
+                stats.atrasadas++;
+            }
+        }
+        
+        return stats;
+    }, {
+        concluidas: 0,
+        pendentes: 0,
+        atrasadas: 0,
+        porPrioridade: {}
+    });
+    
+    return {
+        resumos,
+        estatisticas
+    };
+}
+
+// Exemplo de uso
+const tarefas = [
+    { 
+        id: 1, 
+        titulo: "Estudar JavaScript", 
+        descricao: "Aprender desestruturação", 
+        prioridade: "alta", 
+        concluida: true, 
+        prazo: new Date(2025, 2, 10)
+    },
+    { 
+        id: 2, 
+        titulo: "Preparar apresentação", 
+        descricao: "Slides sobre TaskMaster", 
+        prioridade: "média", 
+        concluida: false, 
+        prazo: new Date(2025, 3, 15)
+    },
+    { 
+        id: 3, 
+        titulo: "Fazer exercícios", 
+        descricao: "Práticas de desestruturação", 
+        prioridade: "alta", 
+        concluida: false, 
+        prazo: new Date(2024, 0, 1) // Data no passado para testar atraso
+    },
+    { 
+        id: 4, 
+        titulo: "Revisar código", 
+        descricao: "Verificar qualidade", 
+        prioridade: "baixa", 
+        concluida: false 
+        // Sem prazo definido
+    }
+];
+
+const resultados = processarTarefas(tarefas);
+console.log("Resumos das tarefas:", resultados.resumos);
+console.log("Estatísticas:", resultados.estatisticas);
+*/
+
+/*
+EXERCÍCIO 5:
+Crie uma função que simule a extração de informações de um banco de dados, utilizando desestruturação para transformar os resultados em objetos formatados.
+
+Resolução:
+// Simulação de resultados de consulta ao banco de dados
+const resultadosConsulta = [
+    ["T1", "Implementar login", "Carlos", "alta", "2025-04-15", null],
+    ["T2", "Corrigir bugs da API", "Ana", "média", "2025-03-20", "2025-03-18"],
+    ["T3", "Atualizar documentação", "Mariana", "baixa", "2025-05-10", null],
+    ["T4", "Refatorar módulo de usuários", "Pedro", "alta", "2025-04-02", "2025-04-01"]
+];
+
+function formatarResultadosConsulta(resultados) {
+    return resultados.map(resultado => {
+        // Desestruturar o array de resultados
+        const [codigo, descricao, responsavel, prioridade, prazoStr, conclusaoStr] = resultado;
+        
+        // Converter strings de data para objetos Date
+        const prazo = prazoStr ? new Date(prazoStr) : null;
+        const conclusao = conclusaoStr ? new Date(conclusaoStr) : null;
+        
+        // Calcular status baseado nas datas
+        let status;
+        if (conclusao) {
+            status = "concluída";
+        } else if (prazo && prazo < new Date()) {
+            status = "atrasada";
+        } else {
+            status = "pendente";
+        }
+        
+        // Calcular dias até o prazo ou desde a conclusão
+        let diasInfo;
+        if (conclusao) {
+            const diasDesdeConlusao = Math.ceil((new Date() - conclusao) / (1000 * 60 * 60 * 24));
+            diasInfo = `Concluída há ${diasDesdeConlusao} dias`;
+        } else if (prazo) {
+            const diasAtePrazo = Math.ceil((prazo - new Date()) / (1000 * 60 * 60 * 24));
+            diasInfo = diasAtePrazo > 0 ? 
+                `Faltam ${diasAtePrazo} dias` : 
+                `Atrasada em ${Math.abs(diasAtePrazo)} dias`;
+        } else {
+            diasInfo = "Sem prazo definido";
+        }
+        
+        // Retornar objeto formatado usando property shorthand
+        return {
+            codigo,
+            descricao,
+            responsavel,
+            prioridade,
+            prazo, // Objeto Date ou null
+            conclusao, // Objeto Date ou null
+            status,
+            diasInfo
+        };
+    });
+}
+
+// Uso da função
+const tarefasFormatadas = formatarResultadosConsulta(resultadosConsulta);
+console.log("Tarefas formatadas a partir da consulta:");
+
+// Exibir cada tarefa formatada
+tarefasFormatadas.forEach(tarefa => {
+    const { codigo, descricao, responsavel, status, diasInfo } = tarefa;
+    console.log(`${codigo}: ${descricao} (${responsavel}) - ${status} - ${diasInfo}`);
+});
+
+// Também podemos agrupar por status usando desestruturação no reduce
+const tarefasPorStatus = tarefasFormatadas.reduce((grupos, { status, ...resto }) => {
+    // Verificar se o grupo já existe, se não, criar um array vazio
+    if (!grupos[status]) {
+        grupos[status] = [];
+    }
+    
+    // Adicionar a tarefa ao grupo correspondente
+    grupos[status].push({ status, ...resto });
+    
+    return grupos;
+}, {});
+
+console.log("\nTarefas agrupadas por status:", tarefasPorStatus);
+*/

@@ -847,3 +847,467 @@ console.timeEnd('Fibonacci memoizado');
 console.time('Fibonacci memoizado 2');
 console.log("Fibonacci(30) memoizado (segunda chamada):", fibonacciMemoizado(30));
 console.timeEnd('Fibonacci memoizado 2');
+
+// ----- Exercícios Práticos -----
+
+/*
+EXERCÍCIO 1:
+Implemente uma função chamada "criarGeradorID" que retorne uma função geradora de IDs sequenciais. Cada vez que a função retornada for chamada, ela deve gerar um novo ID sequencial, começando de um valor inicial fornecido.
+
+Resolução:
+function criarGeradorID(valorInicial = 1) {
+    // Usar closure para manter o contador entre chamadas
+    let contador = valorInicial;
+    
+    // Retornar uma função que incrementa e retorna o contador
+    return function() {
+        const id = contador;
+        contador++;
+        return id;
+    };
+}
+
+// Exemplo de uso:
+const gerarIDTarefa = criarGeradorID(100);
+const gerarIDUsuario = criarGeradorID(1);
+
+console.log("ID Tarefa 1:", gerarIDTarefa()); // 100
+console.log("ID Tarefa 2:", gerarIDTarefa()); // 101
+console.log("ID Tarefa 3:", gerarIDTarefa()); // 102
+
+console.log("ID Usuário 1:", gerarIDUsuario()); // 1
+console.log("ID Usuário 2:", gerarIDUsuario()); // 2
+
+// Um novo gerador começa do valor inicial
+const outroGeradorTarefa = criarGeradorID(500);
+console.log("Outro ID Tarefa:", outroGeradorTarefa()); // 500
+*/
+
+/*
+EXERCÍCIO 2:
+Crie uma função "calcularTempoRestante" que recebe uma data final como parâmetro e retorna um objeto com o tempo restante em dias, horas, minutos e segundos. Se a data já passou, retorne um objeto indicando que o prazo expirou.
+
+Resolução:
+function calcularTempoRestante(dataFinal) {
+    // Converter o parâmetro para objeto Date se for string
+    if (typeof dataFinal === 'string') {
+        dataFinal = new Date(dataFinal);
+    }
+    
+    // Verificar se a data é válida
+    if (!(dataFinal instanceof Date) || isNaN(dataFinal.getTime())) {
+        return { erro: "Data inválida" };
+    }
+    
+    // Obter o momento atual
+    const agora = new Date();
+    
+    // Calcular a diferença em milissegundos
+    const diferencaMs = dataFinal - agora;
+    
+    // Verificar se a data já passou
+    if (diferencaMs <= 0) {
+        return { 
+            expirou: true, 
+            mensagem: "O prazo expirou" 
+        };
+    }
+    
+    // Calcular os componentes de tempo
+    const segundos = Math.floor((diferencaMs / 1000) % 60);
+    const minutos = Math.floor((diferencaMs / (1000 * 60)) % 60);
+    const horas = Math.floor((diferencaMs / (1000 * 60 * 60)) % 24);
+    const dias = Math.floor(diferencaMs / (1000 * 60 * 60 * 24));
+    
+    // Retornar o objeto com o tempo restante
+    return {
+        dias,
+        horas,
+        minutos,
+        segundos,
+        total: diferencaMs,
+        expirou: false,
+        mensagem: `${dias} dias, ${horas} horas, ${minutos} minutos e ${segundos} segundos restantes`
+    };
+}
+
+// Exemplo de uso:
+// Data no futuro (ajuste o ano para um ano futuro)
+const prazoFuturo = new Date();
+prazoFuturo.setDate(prazoFuturo.getDate() + 10); // 10 dias no futuro
+console.log("Tempo restante para o prazo:", calcularTempoRestante(prazoFuturo));
+
+// Data no passado
+const prazoPassado = new Date();
+prazoPassado.setDate(prazoPassado.getDate() - 5); // 5 dias no passado
+console.log("Tempo para prazo expirado:", calcularTempoRestante(prazoPassado));
+
+// Data inválida
+console.log("Tempo para data inválida:", calcularTempoRestante("data-invalida"));
+*/
+
+/*
+EXERCÍCIO 3:
+Desenvolva um sistema de filtragem para tarefas usando funções de ordem superior. Crie uma função "criarFiltradorTarefas" que retorna diferentes funções de filtro com base em um critério especificado.
+
+Resolução:
+// Função de ordem superior que retorna diferentes funções de filtro
+function criarFiltradorTarefas(tipo) {
+    // Filtrar por status (concluída/pendente)
+    if (tipo === 'status') {
+        return function(status) {
+            return function(tarefas) {
+                return tarefas.filter(tarefa => {
+                    if (status === 'concluida') return tarefa.concluida;
+                    if (status === 'pendente') return !tarefa.concluida;
+                    return true; // 'todos'
+                });
+            };
+        };
+    }
+    
+    // Filtrar por prioridade
+    if (tipo === 'prioridade') {
+        return function(prioridade) {
+            return function(tarefas) {
+                return tarefas.filter(tarefa => 
+                    tarefa.prioridade === prioridade
+                );
+            };
+        };
+    }
+    
+    // Filtrar por prazo (vencidas, hoje, futuras)
+    if (tipo === 'prazo') {
+        return function(periodo) {
+            return function(tarefas) {
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0); // Início do dia atual
+                
+                const amanha = new Date(hoje);
+                amanha.setDate(amanha.getDate() + 1);
+                
+                return tarefas.filter(tarefa => {
+                    // Verificar se tem prazo definido
+                    if (!tarefa.prazo) return periodo === 'sem-prazo';
+                    
+                    const prazo = new Date(tarefa.prazo);
+                    prazo.setHours(0, 0, 0, 0); // Normalizar para início do dia
+                    
+                    if (periodo === 'vencidas') return prazo < hoje && !tarefa.concluida;
+                    if (periodo === 'hoje') return prazo.getTime() === hoje.getTime();
+                    if (periodo === 'futuras') return prazo >= amanha;
+                    return true; // 'todas'
+                });
+            };
+        };
+    }
+    
+    // Filtrar por texto (busca em título e descrição)
+    if (tipo === 'texto') {
+        return function(termo) {
+            return function(tarefas) {
+                const termoBusca = termo.toLowerCase();
+                return tarefas.filter(tarefa => 
+                    tarefa.titulo.toLowerCase().includes(termoBusca) ||
+                    (tarefa.descricao && tarefa.descricao.toLowerCase().includes(termoBusca))
+                );
+            };
+        };
+    }
+    
+    // Filtro padrão (retorna todas as tarefas)
+    return function() {
+        return function(tarefas) {
+            return [...tarefas];
+        };
+    };
+}
+
+// Exemplo de uso:
+const tarefas = [
+    { id: 1, titulo: "Estudar JavaScript", descricao: "Aprender sobre funções", prioridade: "alta", concluida: false, prazo: new Date(2025, 3, 15) },
+    { id: 2, titulo: "Fazer compras", descricao: "Comprar itens para a semana", prioridade: "média", concluida: true, prazo: new Date(2025, 2, 10) },
+    { id: 3, titulo: "Preparar apresentação", descricao: "Slides sobre o projeto", prioridade: "alta", concluida: false, prazo: new Date() }, // hoje
+    { id: 4, titulo: "Enviar relatório", descricao: "Relatório mensal", prioridade: "média", concluida: false, prazo: new Date(2024, 11, 31) }, // data no passado
+    { id: 5, titulo: "Organizar arquivos", descricao: null, prioridade: "baixa", concluida: false } // sem prazo e sem descrição
+];
+
+// Criando diferentes filtradores
+const filtrarPorStatus = criarFiltradorTarefas('status');
+const filtrarPorPrioridade = criarFiltradorTarefas('prioridade');
+const filtrarPorPrazo = criarFiltradorTarefas('prazo');
+const filtrarPorTexto = criarFiltradorTarefas('texto');
+
+// Utilizando os filtradores
+const tarefasPendentes = filtrarPorStatus('pendente')(tarefas);
+console.log("Tarefas pendentes:", tarefasPendentes.length);
+
+const tarefasAlta = filtrarPorPrioridade('alta')(tarefas);
+console.log("Tarefas de alta prioridade:", tarefasAlta.length);
+
+const tarefasHoje = filtrarPorPrazo('hoje')(tarefas);
+console.log("Tarefas para hoje:", tarefasHoje.length);
+
+const tarefasJavaScript = filtrarPorTexto('javascript')(tarefas);
+console.log("Tarefas relacionadas a JavaScript:", tarefasJavaScript.length);
+
+// Combinando filtros (composição de funções)
+function combinarFiltros(...filtros) {
+    return function(tarefas) {
+        return filtros.reduce((resultado, filtro) => filtro(resultado), tarefas);
+    };
+}
+
+const filtroTarefasUrgentes = combinarFiltros(
+    filtrarPorStatus('pendente')(tarefas),
+    filtrarPorPrioridade('alta')(tarefas)
+);
+
+console.log("Tarefas urgentes (pendentes e alta prioridade):", filtroTarefasUrgentes.length);
+*/
+
+/*
+EXERCÍCIO 4:
+Implemente uma função construtora "Tarefa" e uma função construtora "Projeto" que herda de "Tarefa". Adicione métodos específicos a cada uma e demonstre como a herança de protótipos funciona.
+
+Resolução:
+// Função construtora para Tarefa
+function Tarefa(titulo, descricao, prioridade = "média") {
+    // Propriedades da tarefa
+    this.id = Date.now() + Math.floor(Math.random() * 1000);
+    this.titulo = titulo;
+    this.descricao = descricao || "";
+    this.prioridade = prioridade;
+    this.concluida = false;
+    this.dataCriacao = new Date();
+    this.dataConclusao = null;
+}
+
+// Métodos no protótipo de Tarefa
+Tarefa.prototype.concluir = function() {
+    this.concluida = true;
+    this.dataConclusao = new Date();
+    return `Tarefa "${this.titulo}" marcada como concluída em ${this.dataConclusao.toLocaleDateString()}`;
+};
+
+Tarefa.prototype.reabrir = function() {
+    this.concluida = false;
+    this.dataConclusao = null;
+    return `Tarefa "${this.titulo}" reaberta`;
+};
+
+Tarefa.prototype.atualizarPrioridade = function(novaPrioridade) {
+    this.prioridade = novaPrioridade;
+    return `Prioridade da tarefa "${this.titulo}" atualizada para ${novaPrioridade}`;
+};
+
+Tarefa.prototype.obterDetalhes = function() {
+    return {
+        id: this.id,
+        titulo: this.titulo,
+        descricao: this.descricao,
+        prioridade: this.prioridade,
+        status: this.concluida ? "Concluída" : "Pendente",
+        criacao: this.dataCriacao.toLocaleDateString(),
+        conclusao: this.dataConclusao ? this.dataConclusao.toLocaleDateString() : "N/A"
+    };
+};
+
+// Função construtora para Projeto (herda de Tarefa)
+function Projeto(titulo, descricao, prioridade, dataInicio, dataFim) {
+    // Chamar o construtor pai
+    Tarefa.call(this, titulo, descricao, prioridade);
+    
+    // Propriedades específicas de Projeto
+    this.dataInicio = dataInicio ? new Date(dataInicio) : new Date();
+    this.dataFim = dataFim ? new Date(dataFim) : null;
+    this.tarefas = []; // Array para armazenar subtarefas do projeto
+    this.progresso = 0; // Percentual de conclusão (0-100)
+}
+
+// Herdar os métodos de Tarefa
+Projeto.prototype = Object.create(Tarefa.prototype);
+Projeto.prototype.constructor = Projeto;
+
+// Métodos específicos para Projeto
+Projeto.prototype.adicionarTarefa = function(titulo, descricao, prioridade) {
+    const novaTarefa = new Tarefa(titulo, descricao, prioridade);
+    this.tarefas.push(novaTarefa);
+    this.atualizarProgresso();
+    return novaTarefa;
+};
+
+Projeto.prototype.removerTarefa = function(idTarefa) {
+    const indice = this.tarefas.findIndex(t => t.id === idTarefa);
+    if (indice === -1) return false;
+    
+    this.tarefas.splice(indice, 1);
+    this.atualizarProgresso();
+    return true;
+};
+
+Projeto.prototype.atualizarProgresso = function() {
+    if (this.tarefas.length === 0) {
+        this.progresso = 0;
+    } else {
+        const tarefasConcluidas = this.tarefas.filter(t => t.concluida).length;
+        this.progresso = Math.round((tarefasConcluidas / this.tarefas.length) * 100);
+    }
+    return this.progresso;
+};
+
+// Sobrescrever o método obterDetalhes para incluir informações do projeto
+Projeto.prototype.obterDetalhes = function() {
+    // Obter detalhes básicos da classe pai
+    const detalhesBasicos = Tarefa.prototype.obterDetalhes.call(this);
+    
+    // Adicionar detalhes específicos do projeto
+    return {
+        ...detalhesBasicos,
+        tipo: "Projeto",
+        dataInicio: this.dataInicio.toLocaleDateString(),
+        dataFim: this.dataFim ? this.dataFim.toLocaleDateString() : "Em aberto",
+        progresso: `${this.progresso}%`,
+        quantidadeTarefas: this.tarefas.length,
+        tarefasConcluidas: this.tarefas.filter(t => t.concluida).length
+    };
+};
+
+// Exemplo de uso:
+// Criando uma tarefa simples
+const tarefa = new Tarefa(
+    "Estudar JavaScript", 
+    "Aprender sobre funções construtoras e protótipos", 
+    "alta"
+);
+console.log("Tarefa criada:", tarefa);
+console.log(tarefa.concluir());
+console.log("Detalhes da tarefa:", tarefa.obterDetalhes());
+
+// Criando um projeto
+const projeto = new Projeto(
+    "Desenvolvimento do TaskMaster",
+    "Sistema de gerenciamento de tarefas",
+    "alta",
+    "2025-01-15",
+    "2025-06-30"
+);
+console.log("Projeto criado:", projeto);
+
+// Adicionando tarefas ao projeto
+projeto.adicionarTarefa("Análise de requisitos", "Levantar requisitos do sistema", "alta");
+projeto.adicionarTarefa("Design da interface", "Criar wireframes e protótipos", "média");
+projeto.adicionarTarefa("Desenvolvimento do backend", "Implementar API", "alta");
+
+// Concluindo algumas tarefas
+projeto.tarefas[0].concluir();
+
+// Verificando o progresso
+console.log("Progresso do projeto:", projeto.atualizarProgresso() + "%");
+
+// Obtendo detalhes completos do projeto
+console.log("Detalhes do projeto:", projeto.obterDetalhes());
+*/
+
+/*
+EXERCÍCIO 5:
+Implemente uma função "memoizarFuncao" que utiliza o padrão de memoização para otimizar funções pesadas. Demonstre seu uso com uma função de cálculo da sequência de Fibonacci e uma função para encontrar tarefas.
+
+Resolução:
+// Função para memoização
+function memoizarFuncao(fn) {
+    // Cache para armazenar resultados
+    const cache = new Map();
+    
+    // Retorna uma função que verifica o cache antes de executar a função original
+    return function(...args) {
+        // Criar uma chave única para os argumentos
+        const chave = JSON.stringify(args);
+        
+        // Verificar se o resultado já está no cache
+        if (cache.has(chave)) {
+            console.log("Resultado recuperado do cache");
+            return cache.get(chave);
+        }
+        
+        // Calcular o resultado (chamando a função original)
+        const resultado = fn.apply(this, args);
+        
+        // Armazenar no cache para uso futuro
+        cache.set(chave, resultado);
+        console.log("Resultado calculado e armazenado no cache");
+        
+        return resultado;
+    };
+}
+
+// Exemplo 1: Função Fibonacci (sem memoização é muito ineficiente)
+function calcularFibonacci(n) {
+    if (n <= 1) return n;
+    return calcularFibonacci(n - 1) + calcularFibonacci(n - 2);
+}
+
+// Versão memoizada do Fibonacci
+const fibonacciMemoizado = memoizarFuncao(function(n) {
+    if (n <= 1) return n;
+    return fibonacciMemoizado(n - 1) + fibonacciMemoizado(n - 2);
+});
+
+// Exemplo 2: Função para buscar tarefas (simulando busca em um banco de dados)
+function buscarTarefasPorStatus(tarefas, status) {
+    console.log(`Executando busca de tarefas com status "${status}"...`);
+    
+    // Simulando uma operação demorada
+    // Em um caso real, isso poderia ser uma consulta ao banco de dados
+    const resultado = tarefas.filter(tarefa => {
+        if (status === 'concluidas') return tarefa.concluida;
+        if (status === 'pendentes') return !tarefa.concluida;
+        return true; // 'todas'
+    });
+    
+    return resultado;
+}
+
+// Versão memoizada da busca de tarefas
+const buscarTarefasMemoizado = memoizarFuncao(buscarTarefasPorStatus);
+
+// Demonstração de uso
+console.log("--- Demonstração de Fibonacci ---");
+console.time("Fibonacci normal (n=35)");
+const resultadoNormal = calcularFibonacci(35);
+console.timeEnd("Fibonacci normal (n=35)");
+console.log("Resultado:", resultadoNormal);
+
+console.time("Fibonacci memoizado (n=35) - primeira chamada");
+const resultadoMemoizado1 = fibonacciMemoizado(35);
+console.timeEnd("Fibonacci memoizado (n=35) - primeira chamada");
+console.log("Resultado:", resultadoMemoizado1);
+
+console.time("Fibonacci memoizado (n=35) - segunda chamada");
+const resultadoMemoizado2 = fibonacciMemoizado(35);
+console.timeEnd("Fibonacci memoizado (n=35) - segunda chamada");
+console.log("Resultado:", resultadoMemoizado2);
+
+// Demonstração com busca de tarefas
+console.log("\n--- Demonstração de Busca de Tarefas ---");
+const tarefas = [
+    { id: 1, titulo: "Tarefa 1", concluida: true },
+    { id: 2, titulo: "Tarefa 2", concluida: false },
+    { id: 3, titulo: "Tarefa 3", concluida: true },
+    { id: 4, titulo: "Tarefa 4", concluida: false },
+    { id: 5, titulo: "Tarefa 5", concluida: true }
+];
+
+console.log("Primeira busca de tarefas concluídas:");
+const tarefasConcluidas1 = buscarTarefasMemoizado(tarefas, 'concluidas');
+console.log(`Encontradas ${tarefasConcluidas1.length} tarefas concluídas`);
+
+console.log("\nSegunda busca de tarefas concluídas (deve usar o cache):");
+const tarefasConcluidas2 = buscarTarefasMemoizado(tarefas, 'concluidas');
+console.log(`Encontradas ${tarefasConcluidas2.length} tarefas concluídas`);
+
+console.log("\nBusca de tarefas pendentes (nova busca, não está no cache):");
+const tarefasPendentes = buscarTarefasMemoizado(tarefas, 'pendentes');
+console.log(`Encontradas ${tarefasPendentes.length} tarefas pendentes`);
+*/

@@ -234,3 +234,132 @@ function gerarIdUnico() {
 
 console.log("ID único para tarefa:", gerarIdUnico());
 console.log("ID único para tarefa:", gerarIdUnico());
+
+// ----- Exercícios Práticos -----
+/*
+EXERCÍCIO 1:
+Crie uma função que gere um número aleatório entre 1 e 100.
+
+Resolução:
+function gerarNumeroAleatorio() {
+    // Math.random() gera número entre 0 (inclusive) e 1 (exclusive)
+    // Multiplicamos por 100 para ter um número entre 0 e 99.99999...
+    // Math.floor arredonda para baixo, obtendo 0 a 99
+    // Adicionamos 1 para ter um número entre 1 e 100
+    return Math.floor(Math.random() * 100) + 1;
+}
+
+console.log("Número aleatório entre 1 e 100:", gerarNumeroAleatorio());
+console.log("Número aleatório entre 1 e 100:", gerarNumeroAleatorio());
+console.log("Número aleatório entre 1 e 100:", gerarNumeroAleatorio());
+*/
+
+/*
+EXERCÍCIO 2:
+Calcule a área de um círculo com base em seu raio usando Math.PI.
+Crie uma função que receba o raio como parâmetro e retorne a área.
+
+Resolução:
+function calcularAreaCirculo(raio) {
+    if (raio < 0) {
+        return "O raio não pode ser negativo";
+    }
+    
+    // Fórmula da área do círculo: A = π * r²
+    const area = Math.PI * Math.pow(raio, 2);
+    
+    // Arredonda para 2 casas decimais
+    return Number(area.toFixed(2));
+}
+
+console.log("Área do círculo com raio 5:", calcularAreaCirculo(5));
+console.log("Área do círculo com raio 7.5:", calcularAreaCirculo(7.5));
+console.log("Área do círculo com raio 10:", calcularAreaCirculo(10));
+*/
+
+/*
+EXERCÍCIO 3:
+Crie uma função que arredonde um número para o número específico de casas decimais.
+
+Resolução:
+function arredondar(numero, casasDecimais = 2) {
+    // Verificar se o número de casas decimais é não-negativo
+    if (casasDecimais < 0) {
+        return "O número de casas decimais não pode ser negativo";
+    }
+    
+    // Usar toFixed para formatar o número e depois converter de volta para número
+    return Number(numero.toFixed(casasDecimais));
+}
+
+console.log("Pi arredondado para 2 casas:", arredondar(Math.PI, 2)); // 3.14
+console.log("Pi arredondado para 4 casas:", arredondar(Math.PI, 4)); // 3.1416
+console.log("Pi arredondado para 0 casas:", arredondar(Math.PI, 0)); // 3
+*/
+
+/*
+EXERCÍCIO 4:
+Use Math.max e Math.min para encontrar o maior e o menor número em um conjunto de valores.
+Crie uma função que receba um array de números e retorne um objeto com o maior e o menor valor.
+
+Resolução:
+function encontrarMaiorEMenor(numeros) {
+    if (!numeros || numeros.length === 0) {
+        return { maior: null, menor: null };
+    }
+    
+    return {
+        maior: Math.max(...numeros),
+        menor: Math.min(...numeros)
+    };
+}
+
+const meusNumeros = [15, 7, 23, 42, 8, 19, 3];
+console.log("Maior e menor número:", encontrarMaiorEMenor(meusNumeros));
+*/
+
+/*
+EXERCÍCIO 5:
+Crie uma função que gere uma senha aleatória com um comprimento especificado.
+A senha deve conter apenas números.
+
+Resolução:
+function gerarSenhaAleatoria(comprimento = 6) {
+    if (comprimento <= 0) {
+        return "O comprimento da senha deve ser positivo";
+    }
+    
+    let senha = "";
+    for (let i = 0; i < comprimento; i++) {
+        // Gerar um dígito aleatório (0-9)
+        const digito = Math.floor(Math.random() * 10);
+        senha += digito;
+    }
+    
+    return senha;
+}
+
+console.log("Senha aleatória de 4 dígitos:", gerarSenhaAleatoria(4));
+console.log("Senha aleatória de 6 dígitos:", gerarSenhaAleatoria(6));
+console.log("Senha aleatória de 8 dígitos:", gerarSenhaAleatoria(8));
+*/
+
+/*
+EXERCÍCIO 6:
+Crie uma função que gere uma cor RGB aleatória.
+A função deve retornar uma string no formato "rgb(r, g, b)".
+
+Resolução:
+function gerarCorAleatoria() {
+    // Gerar componentes R, G e B aleatórios (0-255)
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+console.log("Cor aleatória 1:", gerarCorAleatoria());
+console.log("Cor aleatória 2:", gerarCorAleatoria());
+console.log("Cor aleatória 3:", gerarCorAleatoria());
+*/

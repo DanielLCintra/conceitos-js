@@ -358,3 +358,428 @@ console.log("\nDistribuição por prioridade:");
 for (let [prioridade, quantidade] of Object.entries(relatorio.distribuicao.prioridades)) {
     console.log(`- ${prioridade}: ${quantidade}`);
 }
+
+// ----- Exercícios Práticos -----
+
+/*
+EXERCÍCIO 1:
+Crie um objeto "calculadora" que possua métodos para as quatro operações básicas (soma, subtração, multiplicação e divisão).
+
+Resolução:
+const calculadora = {
+    soma: function(a, b) {
+        return a + b;
+    },
+    subtracao: function(a, b) {
+        return a - b;
+    },
+    multiplicacao: function(a, b) {
+        return a * b;
+    },
+    divisao: function(a, b) {
+        if (b === 0) {
+            return "Erro: Divisão por zero";
+        }
+        return a / b;
+    },
+    // Versão com arrow functions (alternativa)
+    // soma: (a, b) => a + b,
+    // subtracao: (a, b) => a - b,
+    // multiplicacao: (a, b) => a * b,
+    // divisao: (a, b) => b === 0 ? "Erro: Divisão por zero" : a / b
+};
+
+console.log("Soma:", calculadora.soma(10, 5));          // 15
+console.log("Subtração:", calculadora.subtracao(10, 5)); // 5
+console.log("Multiplicação:", calculadora.multiplicacao(10, 5)); // 50
+console.log("Divisão:", calculadora.divisao(10, 5));    // 2
+console.log("Divisão por zero:", calculadora.divisao(10, 0)); // Erro: Divisão por zero
+*/
+
+/*
+EXERCÍCIO 2:
+Crie um objeto "Tarefa" usando o construtor de objeto (new Object()) e adicione métodos para marcar como concluída e alterar descrição.
+
+Resolução:
+function criarTarefa(id, titulo, descricao) {
+    const tarefa = new Object();
+    
+    // Propriedades
+    tarefa.id = id;
+    tarefa.titulo = titulo;
+    tarefa.descricao = descricao;
+    tarefa.concluida = false;
+    tarefa.dataCriacao = new Date();
+    tarefa.dataAtualizacao = null;
+    
+    // Métodos
+    tarefa.marcarComoConcluida = function() {
+        this.concluida = true;
+        this.dataAtualizacao = new Date();
+        return this;
+    };
+    
+    tarefa.marcarComoPendente = function() {
+        this.concluida = false;
+        this.dataAtualizacao = new Date();
+        return this;
+    };
+    
+    tarefa.alterarDescricao = function(novaDescricao) {
+        this.descricao = novaDescricao;
+        this.dataAtualizacao = new Date();
+        return this;
+    };
+    
+    tarefa.resumo = function() {
+        return `Tarefa ${this.id}: ${this.titulo} - ${this.concluida ? 'Concluída' : 'Pendente'}`;
+    };
+    
+    return tarefa;
+}
+
+// Criando uma tarefa com a função
+const tarefa1 = criarTarefa(1, "Estudar objetos", "Aprender sobre propriedades e métodos");
+console.log("Tarefa criada:", tarefa1);
+
+// Utilizando os métodos
+tarefa1.marcarComoConcluida();
+console.log("Após concluir:", tarefa1.resumo());
+
+tarefa1.alterarDescricao("Estudar objetos em JavaScript em profundidade");
+console.log("Após alterar descrição:", tarefa1);
+*/
+
+/*
+EXERCÍCIO 3:
+Desenvolva um sistema simples de gerenciamento de contatos que permita adicionar, listar e buscar contatos.
+
+Resolução:
+const gerenciadorContatos = {
+    contatos: [],
+    
+    // Adicionar novo contato
+    adicionar: function(nome, email, telefone) {
+        const novoContato = {
+            id: this.contatos.length + 1,
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            dataCadastro: new Date()
+        };
+        
+        this.contatos.push(novoContato);
+        return novoContato;
+    },
+    
+    // Listar todos os contatos
+    listar: function() {
+        return this.contatos;
+    },
+    
+    // Buscar contato por ID
+    buscarPorId: function(id) {
+        return this.contatos.find(contato => contato.id === id);
+    },
+    
+    // Buscar contatos por nome (parcial)
+    buscarPorNome: function(termoBusca) {
+        return this.contatos.filter(contato => 
+            contato.nome.toLowerCase().includes(termoBusca.toLowerCase())
+        );
+    },
+    
+    // Remover contato
+    remover: function(id) {
+        const indice = this.contatos.findIndex(contato => contato.id === id);
+        
+        if (indice === -1) {
+            return false; // Contato não encontrado
+        }
+        
+        this.contatos.splice(indice, 1);
+        return true; // Remoção bem-sucedida
+    },
+    
+    // Estatísticas
+    obterEstatisticas: function() {
+        return {
+            total: this.contatos.length,
+            dominiosEmail: this.obterDominiosEmail()
+        };
+    },
+    
+    // Função auxiliar para contar domínios de email
+    obterDominiosEmail: function() {
+        const dominios = {};
+        
+        this.contatos.forEach(contato => {
+            if (contato.email) {
+                const partesEmail = contato.email.split('@');
+                if (partesEmail.length === 2) {
+                    const dominio = partesEmail[1];
+                    dominios[dominio] = (dominios[dominio] || 0) + 1;
+                }
+            }
+        });
+        
+        return dominios;
+    }
+};
+
+// Testando o gerenciador de contatos
+gerenciadorContatos.adicionar("Maria Silva", "maria@empresa.com", "11 98765-4321");
+gerenciadorContatos.adicionar("João Santos", "joao@email.com", "11 91234-5678");
+gerenciadorContatos.adicionar("Ana Oliveira", "ana@empresa.com", "21 99876-5432");
+
+console.log("Lista de contatos:", gerenciadorContatos.listar());
+console.log("Busca por 'Silva':", gerenciadorContatos.buscarPorNome("Silva"));
+console.log("Estatísticas:", gerenciadorContatos.obterEstatisticas());
+*/
+
+/*
+EXERCÍCIO 4:
+Crie um objeto "Produto" que tenha propriedades como nome, preço e estoque, e implemente métodos para calcular o valor total do estoque, adicionar e remover itens do estoque.
+
+Resolução:
+const produto = {
+    nome: "Smartphone Galaxy",
+    preco: 1999.99,
+    estoque: 15,
+    estoqueMinimo: 5,
+    estoqueMaximo: 50,
+    
+    // Cálculo do valor total do estoque
+    valorTotalEstoque: function() {
+        return this.preco * this.estoque;
+    },
+    
+    // Adicionar itens ao estoque
+    adicionarEstoque: function(quantidade) {
+        if (quantidade <= 0) {
+            return {
+                sucesso: false,
+                mensagem: "A quantidade deve ser maior que zero",
+                estoque: this.estoque
+            };
+        }
+        
+        if (this.estoque + quantidade > this.estoqueMaximo) {
+            return {
+                sucesso: false,
+                mensagem: `Limite máximo de estoque excedido (máximo: ${this.estoqueMaximo})`,
+                estoque: this.estoque
+            };
+        }
+        
+        this.estoque += quantidade;
+        return {
+            sucesso: true,
+            mensagem: `${quantidade} unidades adicionadas ao estoque`,
+            estoque: this.estoque
+        };
+    },
+    
+    // Remover itens do estoque
+    removerEstoque: function(quantidade) {
+        if (quantidade <= 0) {
+            return {
+                sucesso: false,
+                mensagem: "A quantidade deve ser maior que zero",
+                estoque: this.estoque
+            };
+        }
+        
+        if (this.estoque < quantidade) {
+            return {
+                sucesso: false,
+                mensagem: "Estoque insuficiente",
+                estoque: this.estoque
+            };
+        }
+        
+        this.estoque -= quantidade;
+        
+        // Verificar se estoque está abaixo do mínimo
+        let mensagem = `${quantidade} unidades removidas do estoque`;
+        if (this.estoque < this.estoqueMinimo) {
+            mensagem += `. ATENÇÃO: Estoque abaixo do mínimo (${this.estoqueMinimo})`;
+        }
+        
+        return {
+            sucesso: true,
+            mensagem: mensagem,
+            estoque: this.estoque
+        };
+    },
+    
+    // Resumo do produto
+    resumo: function() {
+        return {
+            nome: this.nome,
+            preco: this.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+            estoque: this.estoque,
+            valorTotal: this.valorTotalEstoque().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+            status: this.estoque <= this.estoqueMinimo ? "Estoque baixo" : "Estoque normal"
+        };
+    }
+};
+
+// Testes do objeto Produto
+console.log("Produto criado:", produto);
+console.log("Valor total em estoque:", produto.valorTotalEstoque().toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+
+// Adicionar ao estoque
+console.log(produto.adicionarEstoque(10));  // Adiciona 10 unidades
+console.log("Após adicionar:", produto.resumo());
+
+// Remover do estoque
+console.log(produto.removerEstoque(20));    // Remove 20 unidades
+console.log("Após remover:", produto.resumo());
+
+// Tentar remover mais que o estoque disponível
+console.log(produto.removerEstoque(10));    // Tentativa de remover mais que o disponível
+*/
+
+/*
+EXERCÍCIO 5:
+Crie um objeto representando um "Aluno" com informações acadêmicas e métodos para calcular a média, verificar aprovação e gerar relatório de desempenho.
+
+Resolução:
+const aluno = {
+    // Dados pessoais
+    nome: "Carlos Oliveira",
+    matricula: "2023001",
+    curso: "Desenvolvimento Web",
+    
+    // Notas das disciplinas no formato: {nome: string, nota: number}
+    disciplinas: [
+        { nome: "JavaScript", nota: 8.5 },
+        { nome: "HTML e CSS", nota: 9.0 },
+        { nome: "Banco de Dados", nota: 7.8 },
+        { nome: "Frameworks", nota: 8.2 }
+    ],
+    
+    // Configurações
+    notaMinimaAprovacao: 7.0,
+    
+    // Adicionar disciplina
+    adicionarDisciplina: function(nome, nota) {
+        this.disciplinas.push({ nome, nota });
+        return this.disciplinas;
+    },
+    
+    // Alterar nota
+    alterarNota: function(nomeDisciplina, novaNota) {
+        const disciplina = this.disciplinas.find(d => d.nome === nomeDisciplina);
+        
+        if (!disciplina) {
+            return {
+                sucesso: false,
+                mensagem: `Disciplina '${nomeDisciplina}' não encontrada`
+            };
+        }
+        
+        disciplina.nota = novaNota;
+        return {
+            sucesso: true,
+            mensagem: `Nota de ${nomeDisciplina} atualizada para ${novaNota}`
+        };
+    },
+    
+    // Calcular média geral
+    calcularMedia: function() {
+        if (this.disciplinas.length === 0) {
+            return 0;
+        }
+        
+        const somaNotas = this.disciplinas.reduce((soma, disciplina) => {
+            return soma + disciplina.nota;
+        }, 0);
+        
+        return somaNotas / this.disciplinas.length;
+    },
+    
+    // Verificar aprovação em uma disciplina
+    verificarAprovacaoDisciplina: function(nomeDisciplina) {
+        const disciplina = this.disciplinas.find(d => d.nome === nomeDisciplina);
+        
+        if (!disciplina) {
+            return {
+                sucesso: false,
+                mensagem: `Disciplina '${nomeDisciplina}' não encontrada`
+            };
+        }
+        
+        const aprovado = disciplina.nota >= this.notaMinimaAprovacao;
+        return {
+            sucesso: true,
+            aprovado: aprovado,
+            disciplina: disciplina.nome,
+            nota: disciplina.nota,
+            mensagem: aprovado ? "Aprovado" : "Reprovado"
+        };
+    },
+    
+    // Verificar aprovação geral
+    verificarAprovacaoGeral: function() {
+        const media = this.calcularMedia();
+        const aprovado = media >= this.notaMinimaAprovacao;
+        
+        return {
+            media: media.toFixed(1),
+            aprovado: aprovado,
+            mensagem: aprovado ? "Aprovado" : "Reprovado"
+        };
+    },
+    
+    // Gerar relatório de desempenho
+    gerarRelatorio: function() {
+        const disciplinasOrdenadas = [...this.disciplinas]
+            .sort((a, b) => b.nota - a.nota);
+        
+        const melhorDisciplina = disciplinasOrdenadas[0];
+        const piorDisciplina = disciplinasOrdenadas[disciplinasOrdenadas.length - 1];
+        
+        const disciplinasAprovadas = this.disciplinas
+            .filter(d => d.nota >= this.notaMinimaAprovacao);
+        
+        const disciplinasReprovadas = this.disciplinas
+            .filter(d => d.nota < this.notaMinimaAprovacao);
+        
+        return {
+            aluno: {
+                nome: this.nome,
+                matricula: this.matricula,
+                curso: this.curso
+            },
+            desempenho: {
+                media: this.calcularMedia().toFixed(1),
+                status: this.calcularMedia() >= this.notaMinimaAprovacao ? "Aprovado" : "Reprovado",
+                disciplinasMatriculadas: this.disciplinas.length,
+                disciplinasAprovadas: disciplinasAprovadas.length,
+                disciplinasReprovadas: disciplinasReprovadas.length
+            },
+            destaques: {
+                melhorDisciplina: melhorDisciplina ? {
+                    nome: melhorDisciplina.nome,
+                    nota: melhorDisciplina.nota
+                } : null,
+                piorDisciplina: piorDisciplina ? {
+                    nome: piorDisciplina.nome,
+                    nota: piorDisciplina.nota
+                } : null
+            }
+        };
+    }
+};
+
+// Testando o objeto aluno
+console.log("Média geral:", aluno.calcularMedia().toFixed(1));
+console.log("Verificação de aprovação em JavaScript:", aluno.verificarAprovacaoDisciplina("JavaScript"));
+console.log("Relatório de desempenho:", aluno.gerarRelatorio());
+
+// Alterando uma nota
+aluno.alterarNota("Banco de Dados", 9.5);
+console.log("Após alterar nota:", aluno.gerarRelatorio());
+*/

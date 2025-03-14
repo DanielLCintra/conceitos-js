@@ -211,9 +211,67 @@ task2.complete();
 console.log(task2.toString());
 
 // ----- Desafios para os alunos -----
+
 /*
-1. Crie uma função que receba uma lista de tarefas e retorne apenas as tarefas concluídas
-2. Adicione uma propriedade "tags" (array de strings) à estrutura de tarefas
-3. Implemente uma função que calcula quantos dias faltam para o prazo de uma tarefa
-4. Crie uma função que retorne tarefas agrupadas por prioridade
+1. Modifique a função createTask para adicionar um valor padrão para o parâmetro priority ("média")
+
+Resolução:
+const createTask = (title, description, priority = "média", dueDate) => {
+    return {
+        id: Date.now(), // ID baseado no timestamp
+        title: title,
+        description: description,
+        priority: priority,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        createdAt: new Date(),
+        completed: false,
+
+        // Métodos
+        complete() {
+            this.completed = true;
+        },
+
+        isOverdue() {
+            if (!this.dueDate) return false;
+            return !this.completed && this.dueDate < new Date();
+        },
+
+        toString() {
+            return `${this.title} (${this.completed ? 'Concluída' : 'Pendente'})`;
+        }
+    };
+};
+
+2. Crie uma função simples que verifica se uma tarefa tem prazo definido
+
+Resolução:
+const hasDeadline = (task) => {
+    return task.dueDate !== null;
+};
+
+// Exemplo de uso:
+console.log(`A tarefa tem prazo? ${hasDeadline(task1) ? 'Sim' : 'Não'}`);
+
+3. Modifique o método toString() para incluir a prioridade da tarefa
+
+Resolução:
+// No objeto retornado pela função createTask:
+toString() {
+    return `${this.title} (${this.completed ? 'Concluída' : 'Pendente'}) - Prioridade: ${this.priority}`;
+}
+
+4. Crie uma função que recebe uma tarefa e retorna uma string dizendo se ela está concluída ou pendente
+
+Resolução:
+const getTaskStatus = (task) => {
+    if (task.completed) {
+        return "A tarefa está concluída!";
+    } else {
+        return "A tarefa ainda está pendente.";
+    }
+};
+
+// Exemplo de uso:
+console.log(getTaskStatus(task1));
+console.log(getTaskStatus(task2));
 */

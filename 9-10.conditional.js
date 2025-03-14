@@ -334,10 +334,144 @@ console.log(`${usuarioAdmin.nome} pode deletar? ${verificarPermissao(usuarioAdmi
 console.log(`${usuarioLeitor.nome} pode deletar? ${verificarPermissao(usuarioLeitor, "deletar") ? "Sim" : "Não"}`);
 console.log(`${usuarioLeitor.nome} pode ler? ${verificarPermissao(usuarioLeitor, "ler") ? "Sim" : "Não"}`);
 
-// ----- Desafios para os Alunos -----
+// ----- Exercícios para os Alunos -----
 /*
-1. Implemente uma função que verifica se uma tarefa está atrasada, no prazo ou sem prazo definido.
-2. Crie um sistema de notificações que exibe mensagens diferentes com base no status da tarefa.
-3. Implemente uma função que calcula a prioridade de uma tarefa com base em múltiplos fatores (prazo, importância, esforço).
-4. Crie uma função que filtra tarefas com base em critérios específicos usando estruturas condicionais.
+EXERCÍCIO 1:
+Crie uma função que verifique se uma pessoa é maior de idade.
+A função deve receber a idade como parâmetro e retornar true ou false.
+
+Resolução:
+function verificarMaiorIdade(idade) {
+    if (idade >= 18) {
+        return true;
+    } else {
+        return false;
+    }
+    
+    // Versão simplificada:
+    // return idade >= 18;
+}
+
+console.log("15 anos é maior de idade?", verificarMaiorIdade(15)); // false
+console.log("18 anos é maior de idade?", verificarMaiorIdade(18)); // true
+console.log("25 anos é maior de idade?", verificarMaiorIdade(25)); // true
+*/
+
+/*
+EXERCÍCIO 2:
+Crie uma função que classifique uma nota de 0 a 10 como:
+"Ruim" (0-4), "Regular" (5-6), "Bom" (7-8) ou "Excelente" (9-10).
+Retorne "Nota inválida" para valores fora do intervalo 0-10.
+
+Resolução:
+function classificarNota(nota) {
+    if (nota < 0 || nota > 10) {
+        return "Nota inválida";
+    } else if (nota >= 0 && nota <= 4) {
+        return "Ruim";
+    } else if (nota >= 5 && nota <= 6) {
+        return "Regular";
+    } else if (nota >= 7 && nota <= 8) {
+        return "Bom";
+    } else { // nota entre 9 e 10
+        return "Excelente";
+    }
+}
+
+console.log("Classificação da nota 3:", classificarNota(3));   // Ruim
+console.log("Classificação da nota 5:", classificarNota(5));   // Regular
+console.log("Classificação da nota 7:", classificarNota(7));   // Bom
+console.log("Classificação da nota 10:", classificarNota(10)); // Excelente
+console.log("Classificação da nota 12:", classificarNota(12)); // Nota inválida
+*/
+
+/*
+EXERCÍCIO 3:
+Crie uma função que, dado o dia da semana como número (1-7, onde 1 é segunda e 7 é domingo),
+retorne o nome do dia em português.
+
+Resolução:
+function obterDiaSemana(dia) {
+    switch (dia) {
+        case 1:
+            return "Segunda-feira";
+        case 2:
+            return "Terça-feira";
+        case 3:
+            return "Quarta-feira";
+        case 4:
+            return "Quinta-feira";
+        case 5:
+            return "Sexta-feira";
+        case 6:
+            return "Sábado";
+        case 7:
+            return "Domingo";
+        default:
+            return "Dia inválido";
+    }
+}
+
+console.log("Dia 1:", obterDiaSemana(1)); // Segunda-feira
+console.log("Dia 5:", obterDiaSemana(5)); // Sexta-feira
+console.log("Dia 7:", obterDiaSemana(7)); // Domingo
+console.log("Dia 9:", obterDiaSemana(9)); // Dia inválido
+*/
+
+/*
+EXERCÍCIO 4:
+Use o operador ternário para criar uma função que verifica se um usuário está logado
+e retorna "Bem-vindo, [nome]" se estiver logado, ou "Faça login para continuar" caso contrário.
+
+Resolução:
+function mensagemBemVindo(usuario) {
+    return usuario.logado ? `Bem-vindo, ${usuario.nome}` : "Faça login para continuar";
+}
+
+const usuario1 = { nome: "Maria", logado: true };
+const usuario2 = { nome: "João", logado: false };
+
+console.log(mensagemBemVindo(usuario1)); // Bem-vindo, Maria
+console.log(mensagemBemVindo(usuario2)); // Faça login para continuar
+*/
+
+/*
+EXERCÍCIO 5:
+Crie uma função que verifica o status de uma tarefa baseado em duas propriedades:
+concluida (booleano) e prazo (data).
+A função deve retornar: "Concluída", "Atrasada", "Em dia" ou "Prazo não definido".
+
+Resolução:
+function verificarStatusTarefa(tarefa) {
+    // Se não tem prazo definido
+    if (!tarefa.prazo) {
+        return "Prazo não definido";
+    }
+    
+    // Se a tarefa já foi concluída
+    if (tarefa.concluida) {
+        return "Concluída";
+    }
+    
+    // Verifica se está atrasada
+    const hoje = new Date();
+    const prazoDaTarefa = new Date(tarefa.prazo);
+    
+    if (prazoDaTarefa < hoje) {
+        return "Atrasada";
+    } else {
+        return "Em dia";
+    }
+}
+
+// Exemplos de uso
+const tarefa1 = { titulo: "Estudar JS", concluida: true, prazo: "2025-06-01" };
+const tarefa2 = { titulo: "Fazer exercícios", concluida: false, prazo: "2023-01-01" };
+const tarefa3 = { titulo: "Revisar código", concluida: false, prazo: "2025-12-31" };
+const tarefa4 = { titulo: "Organizar tarefas", concluida: false, prazo: null };
+
+console.log("Status da tarefa 1:", verificarStatusTarefa(tarefa1)); // Concluída
+console.log("Status da tarefa 2:", verificarStatusTarefa(tarefa2)); // Atrasada
+console.log("Status da tarefa 3:", verificarStatusTarefa(tarefa3)); // Em dia
+console.log("Status da tarefa 4:", verificarStatusTarefa(tarefa4)); // Prazo não definido
 */

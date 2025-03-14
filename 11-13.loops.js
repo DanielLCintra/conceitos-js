@@ -295,10 +295,166 @@ function pesquisarTarefas(tarefas, termo) {
 const resultadosPesquisa = pesquisarTarefas(tarefas, "re");
 console.log("\nResultados da pesquisa por 're':", resultadosPesquisa);
 
-// ----- Desafios para os Alunos -----
+// ----- Exercícios para os Alunos -----
 /*
-1. Implemente uma função de ordenação que use loops para ordenar as tarefas por diferentes critérios (prioridade, data, alfabético).
-2. Crie uma função que utiliza loops aninhados para agrupar tarefas por mês e semana.
-3. Desenvolva um sistema de filtros combinados que permite ao usuário filtrar tarefas por múltiplos critérios simultaneamente.
-4. Implemente um algoritmo de busca que encontre tarefas mesmo com termos parciais ou com erros de digitação simples.
+EXERCÍCIO 1:
+Use um loop for para exibir os números de 1 a 10.
+
+Resolução:
+function exibirNumeros1a10() {
+    for (let i = 1; i <= 10; i++) {
+        console.log(i);
+    }
+}
+
+console.log("Números de 1 a 10:");
+exibirNumeros1a10();
+*/
+
+/*
+EXERCÍCIO 2:
+Crie um array com 5 frutas e use um loop for para exibir cada uma.
+
+Resolução:
+function exibirFrutas() {
+    const frutas = ["Maçã", "Banana", "Laranja", "Morango", "Uva"];
+    
+    for (let i = 0; i < frutas.length; i++) {
+        console.log(`Fruta ${i + 1}: ${frutas[i]}`);
+    }
+}
+
+console.log("\nLista de frutas:");
+exibirFrutas();
+*/
+
+/*
+EXERCÍCIO 3:
+Use um loop while para fazer uma contagem regressiva de 10 a 1.
+
+Resolução:
+function contagemRegressiva() {
+    let contador = 10;
+    
+    while (contador >= 1) {
+        console.log(contador);
+        contador--;
+    }
+}
+
+console.log("\nContagem regressiva de 10 a 1:");
+contagemRegressiva();
+*/
+
+/*
+EXERCÍCIO 4:
+Crie um loop que exiba apenas os números pares de 0 a 20.
+
+Resolução:
+function exibirNumerosPares() {
+    // Usando for
+    for (let i = 0; i <= 20; i += 2) {
+        console.log(i);
+    }
+    
+    // Alternativa com verificação de paridade
+    // for (let i = 0; i <= 20; i++) {
+    //     if (i % 2 === 0) {
+    //         console.log(i);
+    //     }
+    // }
+}
+
+console.log("\nNúmeros pares de 0 a 20:");
+exibirNumerosPares();
+*/
+
+/*
+EXERCÍCIO 5:
+Crie uma função que receba um array de números e retorne a soma de todos eles usando um loop.
+
+Resolução:
+function somarArray(numeros) {
+    let soma = 0;
+    
+    for (let i = 0; i < numeros.length; i++) {
+        soma += numeros[i];
+    }
+    
+    return soma;
+}
+
+const meusNumeros = [10, 20, 30, 40, 50];
+console.log("\nSoma dos números:", somarArray(meusNumeros)); // 150
+*/
+
+/*
+EXERCÍCIO 6:
+Crie uma função que percorra um objeto e liste todas as suas propriedades e valores.
+
+Resolução:
+function listarPropriedades(objeto) {
+    for (let propriedade in objeto) {
+        console.log(`${propriedade}: ${objeto[propriedade]}`);
+    }
+}
+
+const minhaTarefa = {
+    id: 1,
+    titulo: "Estudar loops",
+    prioridade: "alta",
+    concluida: false
+};
+
+console.log("\nPropriedades da tarefa:");
+listarPropriedades(minhaTarefa);
+*/
+
+/*
+EXERCÍCIO 7:
+Use um loop para encontrar um número específico em um array. Se encontrar, exiba a posição. Caso contrário, exiba uma mensagem informando que não foi encontrado.
+
+Resolução:
+function encontrarNumero(array, numero) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === numero) {
+            return `Número ${numero} encontrado na posição ${i}`;
+        }
+    }
+    
+    return `Número ${numero} não encontrado no array`;
+}
+
+const numeros = [5, 8, 12, 3, 7, 9, 15];
+console.log("\nBuscando números:");
+console.log(encontrarNumero(numeros, 7));  // Encontrado na posição 4
+console.log(encontrarNumero(numeros, 10)); // Não encontrado
+*/
+
+/*
+EXERCÍCIO 8:
+Crie uma função que conte quantas tarefas de um array estão concluídas.
+
+Resolução:
+function contarTarefasConcluidas(tarefas) {
+    let contador = 0;
+    
+    for (let i = 0; i < tarefas.length; i++) {
+        if (tarefas[i].concluida) {
+            contador++;
+        }
+    }
+    
+    return contador;
+}
+
+const minhasTarefas = [
+    { titulo: "Tarefa 1", concluida: true },
+    { titulo: "Tarefa 2", concluida: false },
+    { titulo: "Tarefa 3", concluida: true },
+    { titulo: "Tarefa 4", concluida: false },
+    { titulo: "Tarefa 5", concluida: true }
+];
+
+console.log("\nTotal de tarefas concluídas:", contarTarefasConcluidas(minhasTarefas)); // 3
 */

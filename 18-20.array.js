@@ -431,10 +431,272 @@ const tarefasAgrupadas = agruparPorCategoria(tarefasCategorizadas);
 console.log("\nTarefas agrupadas por categoria:");
 console.log(tarefasAgrupadas);
 
-// ----- Desafios para os Alunos -----
+// ----- Exercícios Práticos -----
+
 /*
-1. Implemente uma função que encontre tarefas duplicadas (com o mesmo título) em um array.
-2. Crie uma função que agrupe tarefas por mês de vencimento.
-3. Implemente um sistema de tags para tarefas, permitindo que uma tarefa tenha múltiplas tags e seja pesquisável por elas.
-4. Desenvolva uma função que crie um resumo semanal mostrando quantas tarefas foram concluídas e quantas foram adicionadas por dia.
+EXERCÍCIO 1:
+Implemente uma função que encontre tarefas duplicadas (com o mesmo título) em um array.
+
+Resolução:
+function encontrarTarefasDuplicadas(tarefas) {
+    // Objeto para armazenar contagem de títulos
+    const contagem = {};
+    const duplicadas = [];
+
+    // Contar ocorrências de cada título
+    tarefas.forEach(tarefa => {
+        const titulo = tarefa.titulo;
+        contagem[titulo] = (contagem[titulo] || 0) + 1;
+    });
+
+    // Filtrar apenas os títulos duplicados
+    for (const titulo in contagem) {
+        if (contagem[titulo] > 1) {
+            // Encontrar todas as tarefas com este título
+            const tarefasComEsseTitulo = tarefas.filter(tarefa => tarefa.titulo === titulo);
+            duplicadas.push({
+                titulo,
+                ocorrencias: contagem[titulo],
+                tarefas: tarefasComEsseTitulo
+            });
+        }
+    }
+
+    return duplicadas;
+}
+
+// Exemplo de uso
+const tarefasParaTeste = [
+    { id: 1, titulo: "Estudar JavaScript", descricao: "Arrays e objetos" },
+    { id: 2, titulo: "Revisar código", descricao: "Verificar bugs" },
+    { id: 3, titulo: "Estudar JavaScript", descricao: "Funções e callbacks" },
+    { id: 4, titulo: "Preparar apresentação", descricao: "Slides" },
+    { id: 5, titulo: "Revisar código", descricao: "Melhorar performance" }
+];
+
+console.log("Tarefas duplicadas:", encontrarTarefasDuplicadas(tarefasParaTeste));
+*/
+
+/*
+EXERCÍCIO 2:
+Crie uma função que agrupe tarefas por mês de vencimento.
+
+Resolução:
+function agruparPorMesVencimento(tarefas) {
+    const meses = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    ];
+    
+    // Objeto para armazenar tarefas por mês
+    const tarefasPorMes = {};
+    
+    tarefas.forEach(tarefa => {
+        if (!tarefa.dataVencimento) return;
+        
+        const data = new Date(tarefa.dataVencimento);
+        const mes = data.getMonth(); // 0-11
+        const ano = data.getFullYear();
+        const chave = `${meses[mes]}-${ano}`;
+        
+        if (!tarefasPorMes[chave]) {
+            tarefasPorMes[chave] = {
+                mes: meses[mes],
+                ano: ano,
+                tarefas: []
+            };
+        }
+        
+        tarefasPorMes[chave].tarefas.push(tarefa);
+    });
+    
+    return tarefasPorMes;
+}
+
+// Exemplo de uso
+const tarefasDataVencimento = [
+    { id: 1, titulo: "Entregar relatório", dataVencimento: new Date(2023, 4, 10) },
+    { id: 2, titulo: "Revisar PR", dataVencimento: new Date(2023, 4, 25) },
+    { id: 3, titulo: "Preparar apresentação", dataVencimento: new Date(2023, 5, 5) },
+    { id: 4, titulo: "Atualizar documentação", dataVencimento: new Date(2023, 5, 15) },
+    { id: 5, titulo: "Fazer deploy", dataVencimento: new Date(2023, 4, 30) }
+];
+
+console.log("Tarefas agrupadas por mês:", agruparPorMesVencimento(tarefasDataVencimento));
+*/
+
+/*
+EXERCÍCIO 3:
+Implemente um sistema de tags para tarefas, permitindo que uma tarefa tenha múltiplas tags e seja pesquisável por elas.
+
+Resolução:
+const gerenciadorTags = {
+    // Adicionar tags a uma tarefa
+    adicionarTags(tarefa, ...novasTags) {
+        // Se a tarefa não tem array de tags, criar um
+        if (!tarefa.tags) {
+            tarefa.tags = [];
+        }
+        
+        // Adicionar apenas tags que não existem ainda
+        novasTags.forEach(tag => {
+            if (!tarefa.tags.includes(tag)) {
+                tarefa.tags.push(tag);
+            }
+        });
+        
+        return tarefa;
+    },
+    
+    // Remover tags de uma tarefa
+    removerTags(tarefa, ...tagsRemover) {
+        if (!tarefa.tags) return tarefa;
+        
+        tarefa.tags = tarefa.tags.filter(tag => !tagsRemover.includes(tag));
+        return tarefa;
+    },
+    
+    // Buscar tarefas por tag
+    buscarPorTag(tarefas, tag) {
+        return tarefas.filter(tarefa => 
+            tarefa.tags && tarefa.tags.includes(tag)
+        );
+    },
+    
+    // Buscar tarefas que tenham todas as tags especificadas
+    buscarPorTodasTags(tarefas, ...tags) {
+        return tarefas.filter(tarefa => 
+            tarefa.tags && tags.every(tag => tarefa.tags.includes(tag))
+        );
+    },
+    
+    // Listar todas as tags únicas usadas nas tarefas
+    listarTodasTags(tarefas) {
+        const todasTags = new Set();
+        
+        tarefas.forEach(tarefa => {
+            if (tarefa.tags) {
+                tarefa.tags.forEach(tag => todasTags.add(tag));
+            }
+        });
+        
+        return Array.from(todasTags);
+    }
+};
+
+// Exemplo de uso
+const tarefasComTags = [
+    { id: 1, titulo: "Estudar JavaScript", tags: ["estudo", "programação"] },
+    { id: 2, titulo: "Reunião com cliente", tags: ["trabalho", "importante"] },
+    { id: 3, titulo: "Fazer compras", tags: ["pessoal"] }
+];
+
+// Adicionar tags a uma tarefa
+const tarefaModificada = {...tarefasComTags[0]};  // Clone para não modificar o original
+gerenciadorTags.adicionarTags(tarefaModificada, "urgente", "frontend");
+console.log("Tarefa após adicionar tags:", tarefaModificada);
+
+// Buscar tarefas por tag
+console.log("Tarefas com tag 'importante':", 
+    gerenciadorTags.buscarPorTag(tarefasComTags, "importante"));
+*/
+
+/*
+EXERCÍCIO 4:
+Desenvolva uma função que crie um resumo semanal mostrando quantas tarefas foram concluídas e quantas foram adicionadas por dia.
+
+Resolução:
+function criarResumoSemanal(tarefas, dataInicio) {
+    // Garantir que dataInicio seja uma data
+    const inicio = dataInicio instanceof Date ? new Date(dataInicio) : new Date();
+    
+    // Ajustar para o início da semana (domingo)
+    inicio.setDate(inicio.getDate() - inicio.getDay());
+    inicio.setHours(0, 0, 0, 0);
+    
+    // Criar data de fim (7 dias depois)
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + 7);
+    
+    // Preparar estrutura para o resumo
+    const resumo = {
+        dataInicio: new Date(inicio),
+        dataFim: new Date(fim),
+        dias: {},
+        totais: {
+            adicionadas: 0,
+            concluidas: 0
+        }
+    };
+    
+    // Inicializar cada dia da semana
+    for (let i = 0; i < 7; i++) {
+        const dia = new Date(inicio);
+        dia.setDate(dia.getDate() + i);
+        const chaveDia = dia.toISOString().split('T')[0];
+        
+        resumo.dias[chaveDia] = {
+            data: new Date(dia),
+            adicionadas: 0,
+            concluidas: 0,
+            tarefas: []
+        };
+    }
+    
+    // Processar cada tarefa
+    tarefas.forEach(tarefa => {
+        // Verificar se a data de criação está dentro da semana
+        if (tarefa.dataCriacao >= inicio && tarefa.dataCriacao < fim) {
+            const chaveDia = tarefa.dataCriacao.toISOString().split('T')[0];
+            
+            if (resumo.dias[chaveDia]) {
+                resumo.dias[chaveDia].adicionadas++;
+                resumo.dias[chaveDia].tarefas.push(tarefa);
+                resumo.totais.adicionadas++;
+            }
+        }
+        
+        // Verificar se a tarefa foi concluída nesta semana
+        if (tarefa.concluida && tarefa.dataAtualizacao >= inicio && tarefa.dataAtualizacao < fim) {
+            const chaveDia = tarefa.dataAtualizacao.toISOString().split('T')[0];
+            
+            if (resumo.dias[chaveDia]) {
+                resumo.dias[chaveDia].concluidas++;
+                resumo.totais.concluidas++;
+            }
+        }
+    });
+    
+    return resumo;
+}
+
+// Exemplo de uso
+const dataAtual = new Date();
+const tarefasSemana = [
+    { 
+        id: 1, 
+        titulo: "Estudar Arrays", 
+        concluida: true, 
+        dataCriacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 5), 
+        dataAtualizacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 3) 
+    },
+    { 
+        id: 2, 
+        titulo: "Fazer exercícios", 
+        concluida: false, 
+        dataCriacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 4), 
+        dataAtualizacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 4) 
+    },
+    { 
+        id: 3, 
+        titulo: "Revisar código", 
+        concluida: true, 
+        dataCriacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 2), 
+        dataAtualizacao: new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 1) 
+    }
+];
+
+const resumoSemanal = criarResumoSemanal(tarefasSemana, new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate() - 6));
+console.log("Total de tarefas adicionadas:", resumoSemanal.totais.adicionadas);
+console.log("Total de tarefas concluídas:", resumoSemanal.totais.concluidas);
 */
