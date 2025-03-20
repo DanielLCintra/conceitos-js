@@ -1,13 +1,14 @@
 /**
- * TaskMaster - Aula sobre Estruturas de Repetição
- * Este arquivo demonstra as diferentes estruturas de repetição em JavaScript
+ * TaskMaster - Complemento: Métodos Modernos de Array
+ * Este arquivo demonstra os métodos modernos de manipulação de arrays em JavaScript
+ * comparando-os com as estruturas de repetição tradicionais
  */
 
 // ========================================
-// AULA 11-13: ESTRUTURAS DE REPETIÇÃO
+// MÉTODOS MODERNOS DE ARRAY EM JAVASCRIPT
 // ========================================
 
-// Array de tarefas para exemplos
+// Array de tarefas para exemplos (mesmo do arquivo original)
 const tarefas = [
     { id: 1, titulo: "Estudar JavaScript", concluida: true, prioridade: "alta" },
     { id: 2, titulo: "Criar projeto TaskMaster", concluida: false, prioridade: "alta" },
@@ -16,79 +17,113 @@ const tarefas = [
     { id: 5, titulo: "Debugar aplicação", concluida: true, prioridade: "média" }
 ];
 
-// ----- Loop for -----
-console.log("---- Loop for ----");
+// ----- forEach -----
+console.log("---- Array.forEach() ----");
 
-// Estrutura básica do for
-for (let i = 0; i < 5; i++) {
-    console.log(`Iteração ${i}`);
-}
+// forEach vs for tradicional
+console.log("Comparação: for tradicional vs forEach");
 
-// Percorrendo um array com for
-console.log("\nPercorrendo array com for:");
+// Com for tradicional
+console.log("\nUsando for tradicional:");
 for (let i = 0; i < tarefas.length; i++) {
     console.log(`Tarefa ${i + 1}: ${tarefas[i].titulo}`);
 }
 
-// Loop for com múltiplas variáveis
-console.log("\nLoop for com múltiplas variáveis:");
-for (let i = 0, j = tarefas.length - 1; i < j; i++, j--) {
-    console.log(`Trocando ${tarefas[i].titulo} com ${tarefas[j].titulo}`);
+// Com forEach (mais legível e conciso)
+console.log("\nUsando forEach:");
+tarefas.forEach((tarefa, indice) => {
+    console.log(`Tarefa ${indice + 1}: ${tarefa.titulo}`);
+});
+
+// Vantagens do forEach:
+console.log("\nVantagens do forEach:");
+console.log("1. Sintaxe mais limpa e declarativa");
+console.log("2. Não precisa gerenciar índices manualmente");
+console.log("3. Menos propenso a erros (como off-by-one)");
+console.log("4. Acesso direto ao valor e índice");
+
+// ----- map -----
+console.log("\n---- Array.map() ----");
+
+// map vs for com novo array
+console.log("Comparação: for com novo array vs map");
+
+// Com for tradicional
+console.log("\nUsando for tradicional:");
+const titulosTarefasTradicionais = [];
+for (let i = 0; i < tarefas.length; i++) {
+    titulosTarefasTradicionais.push(`${tarefas[i].titulo} (${tarefas[i].prioridade})`);
+}
+console.log(titulosTarefasTradicionais);
+
+// Com map (transforma cada elemento em um novo valor)
+console.log("\nUsando map:");
+const titulosTarefas = tarefas.map(tarefa =>
+    `${tarefa.titulo} (${tarefa.prioridade})`
+);
+console.log(titulosTarefas);
+
+// Exemplo prático: transformando formato de dados
+console.log("\nTransformando formato de dados com map:");
+const tarefasFormatadas = tarefas.map(tarefa => ({
+    titulo: tarefa.titulo,
+    status: tarefa.concluida ? "✓ Concluída" : "□ Pendente",
+    nivelPrioridade: tarefa.prioridade === "alta" ? 3 : (tarefa.prioridade === "média" ? 2 : 1)
+}));
+console.log(tarefasFormatadas);
+
+// ----- filter -----
+console.log("\n---- Array.filter() ----");
+
+// filter vs for com condição
+console.log("Comparação: for com condição vs filter");
+
+// Com for tradicional
+console.log("\nUsando for tradicional (filtrando tarefas pendentes):");
+const tarefasPendentesTradicionais = [];
+for (let i = 0; i < tarefas.length; i++) {
+    if (!tarefas[i].concluida) {
+        tarefasPendentesTradicionais.push(tarefas[i]);
+    }
+}
+console.log(`Encontradas ${tarefasPendentesTradicionais.length} tarefas pendentes`);
+
+// Com filter (filtra elementos com base em uma condição)
+console.log("\nUsando filter:");
+const tarefasPendentes = tarefas.filter(tarefa => !tarefa.concluida);
+console.log(`Encontradas ${tarefasPendentes.length} tarefas pendentes:`,
+    tarefasPendentes.map(t => t.titulo));
+
+// Substituindo função de filtro por prioridade da aula original
+console.log("\nRefatorando a função filtrarTarefasPorPrioridade:");
+
+// Versão original com for
+function filtrarTarefasPorPrioridadeTradicional(tarefas, prioridade) {
+    const resultado = [];
+    for (let i = 0; i < tarefas.length; i++) {
+        if (tarefas[i].prioridade === prioridade) {
+            resultado.push(tarefas[i]);
+        }
+    }
+    return resultado;
 }
 
-// ----- Loop for...in -----
-console.log("\n---- Loop for...in ----");
-
-// Iterando sobre propriedades de um objeto
-const tarefa = tarefas[0];
-console.log("Propriedades da tarefa:");
-for (let propriedade in tarefa) {
-    console.log(`${propriedade}: ${tarefa[propriedade]}`);
+// Versão com filter (mais concisa e declarativa)
+function filtrarTarefasPorPrioridade(tarefas, prioridade) {
+    return tarefas.filter(tarefa => tarefa.prioridade === prioridade);
 }
 
-// Iterando sobre índices de um array
-console.log("\nÍndices do array de tarefas:");
-for (let indice in tarefas) {
-    console.log(`Índice ${indice}: ${tarefas[indice].titulo}`);
-}
+const tarefasAlta = filtrarTarefasPorPrioridade(tarefas, "alta");
+console.log("Tarefas de alta prioridade:", tarefasAlta.map(t => t.titulo));
 
-// Cuidado com for...in e arrays (não garante ordem)
-console.log("\nCuidado com a ordem em for...in:");
-const arrayModificado = tarefas;
-arrayModificado.customProperty = "Propriedade personalizada";
-for (let key in arrayModificado) {
-    console.log(key); // Pode incluir propriedades não numéricas
-}
+// ----- find e findIndex -----
+console.log("\n---- Array.find() e Array.findIndex() ----");
 
-// ----- Loop for...of -----
-console.log("\n---- Loop for...of ----");
+// find vs loop com break
+console.log("Comparação: while com break vs find/findIndex");
 
-// Iterando sobre elementos de um array
-console.log("Tarefas com for...of:");
-for (let tarefa of tarefas) {
-    console.log(`- ${tarefa.titulo} (${tarefa.prioridade})`);
-}
-
-// Iterando sobre caracteres de uma string
-const palavra = "TaskMaster";
-console.log("\nLetras de 'TaskMaster':");
-for (let letra of palavra) {
-    console.log(letra);
-}
-
-// ----- Loop while -----
-console.log("\n---- Loop while ----");
-
-// Estrutura básica do while
-let contador = 0;
-console.log("Loop while básico:");
-while (contador < 5) {
-    console.log(`Contador: ${contador}`);
-    contador++;
-}
-
-// Exemplo prático: procurando um elemento
-console.log("\nProcurando tarefa com while:");
+// Com while e break (como no exemplo da aula original)
+console.log("\nUsando while com break:");
 let i = 0;
 while (i < tarefas.length && tarefas[i].titulo !== "Revisar código") {
     console.log(`Verificando: ${tarefas[i].titulo}`);
@@ -101,148 +136,46 @@ if (i < tarefas.length) {
     console.log("Tarefa não encontrada");
 }
 
-// ----- Loop do...while -----
-console.log("\n---- Loop do...while ----");
+// Com find (encontra o primeiro elemento que satisfaz uma condição)
+console.log("\nUsando find:");
+const tarefaRevisao = tarefas.find(tarefa => tarefa.titulo === "Revisar código");
+console.log(tarefaRevisao ? `Tarefa encontrada: ${tarefaRevisao.titulo}` : "Tarefa não encontrada");
 
-// Estrutura básica do do...while
-contador = 0;
-console.log("Loop do...while básico:");
-do {
-    console.log(`Contador: ${contador}`);
-    contador++;
-} while (contador < 5);
+// Com findIndex (encontra o índice do primeiro elemento que satisfaz uma condição)
+console.log("\nUsando findIndex:");
+const indiceRevisao = tarefas.findIndex(tarefa => tarefa.titulo === "Revisar código");
+console.log(indiceRevisao !== -1
+    ? `Tarefa encontrada na posição ${indiceRevisao}: ${tarefas[indiceRevisao].titulo}`
+    : "Tarefa não encontrada");
 
-// Exemplo com condição falsa inicialmente
-console.log("\nLoop do...while com condição falsa inicialmente:");
-contador = 10;
-do {
-    console.log(`Este código ainda executa uma vez mesmo com contador = ${contador}`);
-} while (contador < 5);
+// ----- reduce -----
+console.log("\n---- Array.reduce() ----");
 
-// ----- Controle de Loops: break e continue -----
-console.log("\n---- Controle de Loops: break e continue ----");
+// reduce vs acumulador em loop
+console.log("Comparação: loop com acumulador vs reduce");
 
-// break: interrompe a execução do loop
-console.log("Usando break para parar na tarefa de id 3:");
-for (let i = 0; i < tarefas.length; i++) {
-    console.log(`Verificando tarefa ${tarefas[i].id}: ${tarefas[i].titulo}`);
-
-    if (tarefas[i].id === 3) {
-        console.log("Tarefa 3 encontrada. Parando loop.");
-        break;
-    }
-}
-
-// continue: pula para a próxima iteração
-console.log("\nUsando continue para mostrar apenas tarefas não concluídas:");
+// Com for tradicional
+console.log("\nContando tarefas concluídas com for:");
+let concluidasTradicional = 0;
 for (let i = 0; i < tarefas.length; i++) {
     if (tarefas[i].concluida) {
-        console.log(`Pulando tarefa concluída: ${tarefas[i].titulo}`);
-        continue;
-    }
-
-    console.log(`Tarefa pendente: ${tarefas[i].titulo}`);
-}
-
-// ----- Loops Aninhados -----
-console.log("\n---- Loops Aninhados ----");
-
-// Matriz de exemplo (projetos e suas tarefas)
-const projetos = [
-    { nome: "Website", tarefas: ["Design", "HTML", "CSS", "JavaScript"] },
-    { nome: "API", tarefas: ["Modelagem", "Rotas", "Controladores"] },
-    { nome: "App Mobile", tarefas: ["Wireframes", "UI", "Integração"] }
-];
-
-console.log("Lista de tarefas por projeto:");
-for (let i = 0; i < projetos.length; i++) {
-    console.log(`\nProjeto: ${projetos[i].nome}`);
-
-    for (let j = 0; j < projetos[i].tarefas.length; j++) {
-        console.log(`  - Tarefa ${j + 1}: ${projetos[i].tarefas[j]}`);
+        concluidasTradicional++;
     }
 }
+console.log(`Total de tarefas concluídas: ${concluidasTradicional}`);
 
-// Usando break e continue em loops aninhados
-console.log("\nUsando labels, break e continue em loops aninhados:");
+// Com reduce (acumula valores em um único resultado)
+console.log("\nContando tarefas concluídas com reduce:");
+const concluidas = tarefas.reduce((total, tarefa) => {
+    return total + (tarefa.concluida ? 1 : 0);
+}, 0);
+console.log(`Total de tarefas concluídas: ${concluidas}`);
 
-projetoLoop: for (let i = 0; i < projetos.length; i++) {
-    console.log(`\nAnalisando projeto: ${projetos[i].nome}`);
+// Exemplo avançado: estatísticas de tarefas (refatoração do exemplo da aula)
+console.log("\nEstatísticas com reduce (refatoração do exemplo da aula):");
 
-    for (let j = 0; j < projetos[i].tarefas.length; j++) {
-        if (projetos[i].tarefas[j] === "HTML") {
-            console.log(`  Encontrou HTML! Pulando para o próximo projeto.`);
-            continue projetoLoop; // Pula para a próxima iteração do loop externo
-        }
-
-        console.log(`  - Verificando tarefa: ${projetos[i].tarefas[j]}`);
-
-        if (projetos[i].tarefas[j] === "Integração") {
-            console.log(`  Encontrou Integração! Parando completamente.`);
-            break projetoLoop; // Interrompe ambos os loops
-        }
-    }
-}
-
-// ----- Otimização de Loops -----
-console.log("\n---- Otimização de Loops ----");
-
-// Armazenando o tamanho do array fora do loop
-console.log("Loop otimizado com tamanho armazenado:");
-for (let i = 0, len = tarefas.length; i < len; i++) {
-    console.log(`Tarefa ${i + 1}: ${tarefas[i].titulo}`);
-}
-
-// Loop reverso (às vezes mais eficiente)
-console.log("\nLoop reverso:");
-for (let i = tarefas.length - 1; i >= 0; i--) {
-    console.log(`Tarefa ${i + 1}: ${tarefas[i].titulo}`);
-}
-
-// ----- Exemplos Práticos no TaskMaster -----
-console.log("\n---- Exemplos Práticos no TaskMaster ----");
-
-// Exemplo 1: Filtragem de tarefas
-function filtrarTarefasPorPrioridade(tarefas, prioridade) {
-    const resultado = [];
-
-    for (let i = 0; i < tarefas.length; i++) {
-        if (tarefas[i].prioridade === prioridade) {
-            resultado.push(tarefas[i]);
-        }
-    }
-
-    return resultado;
-}
-
-const tarefasAlta = filtrarTarefasPorPrioridade(tarefas, "alta");
-console.log("Tarefas de alta prioridade:", tarefasAlta);
-
-// Exemplo 2: Paginação de resultados
-function paginarTarefas(tarefas, tamanhoPagina, numeroPagina) {
-    const inicio = (numeroPagina - 1) * tamanhoPagina;
-    const fim = inicio + tamanhoPagina;
-    const resultado = [];
-
-    for (let i = inicio; i < fim && i < tarefas.length; i++) {
-        resultado.push(tarefas[i]);
-    }
-
-    return {
-        pagina: numeroPagina,
-        totalPaginas: Math.ceil(tarefas.length / tamanhoPagina),
-        totalItens: tarefas.length,
-        itens: resultado
-    };
-}
-
-const pagina1 = paginarTarefas(tarefas, 2, 1);
-console.log("\nPaginação - Página 1:", pagina1);
-const pagina2 = paginarTarefas(tarefas, 2, 2);
-console.log("Paginação - Página 2:", pagina2);
-
-// Exemplo 3: Estatísticas de tarefas
-function calcularEstatisticas(tarefas) {
+// Versão original com loop
+function calcularEstatisticasTradicional(tarefas) {
     let total = tarefas.length;
     let concluidas = 0;
     let prioridades = { baixa: 0, média: 0, alta: 0 };
@@ -251,7 +184,6 @@ function calcularEstatisticas(tarefas) {
         if (tarefa.concluida) {
             concluidas++;
         }
-
         prioridades[tarefa.prioridade]++;
     }
 
@@ -264,197 +196,242 @@ function calcularEstatisticas(tarefas) {
     };
 }
 
-const estatisticas = calcularEstatisticas(tarefas);
-console.log("\nEstatísticas de tarefas:", estatisticas);
-
-// Exemplo 4: Sistema de pesquisa com destacamento
-function pesquisarTarefas(tarefas, termo) {
-    if (!termo || termo.trim() === "") {
-        return { encontradas: tarefas, total: tarefas.length };
-    }
-
-    termo = termo.toLowerCase();
-    const encontradas = [];
-
-    for (let tarefa of tarefas) {
-        if (tarefa.titulo.toLowerCase().includes(termo)) {
-            // Cria uma cópia da tarefa para não modificar a original
-            const tarefaEncontrada = { ...tarefa };
-
-            // Destaca o termo na cópia
-            const regex = new RegExp(`(${termo})`, 'gi');
-            tarefaEncontrada.tituloDestacado = tarefa.titulo.replace(regex, '<mark>$1</mark>');
-
-            encontradas.push(tarefaEncontrada);
+// Versão com reduce (combina todas as operações em uma só passagem)
+function calcularEstatisticas(tarefas) {
+    const estatisticas = tarefas.reduce((acc, tarefa) => {
+        // Incrementa contador de concluídas se necessário
+        if (tarefa.concluida) {
+            acc.concluidas++;
         }
-    }
 
-    return { encontradas, total: encontradas.length };
+        // Incrementa contador de prioridade
+        acc.prioridades[tarefa.prioridade]++;
+
+        return acc;
+    }, {
+        total: tarefas.length,
+        concluidas: 0,
+        prioridades: { baixa: 0, média: 0, alta: 0 }
+    });
+
+    // Cálculos derivados
+    estatisticas.pendentes = estatisticas.total - estatisticas.concluidas;
+    estatisticas.percentualConcluido = (estatisticas.concluidas / estatisticas.total) * 100;
+
+    return estatisticas;
 }
 
-const resultadosPesquisa = pesquisarTarefas(tarefas, "re");
-console.log("\nResultados da pesquisa por 're':", resultadosPesquisa);
+const estatisticas = calcularEstatisticas(tarefas);
+console.log("Estatísticas de tarefas:", estatisticas);
 
-// ----- Exercícios para os Alunos -----
+// ----- some e every -----
+console.log("\n---- Array.some() e Array.every() ----");
+
+// some vs loop com flag
+console.log("\nVerificando se pelo menos uma tarefa está concluída:");
+
+// Com for tradicional e flag
+let temConcluidaTradicional = false;
+for (let i = 0; i < tarefas.length; i++) {
+    if (tarefas[i].concluida) {
+        temConcluidaTradicional = true;
+        break;  // Podemos parar assim que encontrarmos uma
+    }
+}
+console.log(`Pelo menos uma tarefa concluída? ${temConcluidaTradicional ? 'Sim' : 'Não'}`);
+
+// Com some (verifica se pelo menos um elemento satisfaz a condição)
+const temConcluida = tarefas.some(tarefa => tarefa.concluida);
+console.log(`Pelo menos uma tarefa concluída? ${temConcluida ? 'Sim' : 'Não'}`);
+
+// every vs loop com flag
+console.log("\nVerificando se todas as tarefas estão concluídas:");
+
+// Com for tradicional e flag
+let todasConcluidasTradicional = true;
+for (let i = 0; i < tarefas.length; i++) {
+    if (!tarefas[i].concluida) {
+        todasConcluidasTradicional = false;
+        break;  // Podemos parar na primeira não concluída
+    }
+}
+console.log(`Todas as tarefas concluídas? ${todasConcluidasTradicional ? 'Sim' : 'Não'}`);
+
+// Com every (verifica se todos os elementos satisfazem a condição)
+const todasConcluidas = tarefas.every(tarefa => tarefa.concluida);
+console.log(`Todas as tarefas concluídas? ${todasConcluidas ? 'Sim' : 'Não'}`);
+
+// ----- flat e flatMap -----
+console.log("\n---- Array.flat() e Array.flatMap() ----");
+
+// Exemplo com matriz de tarefas aninhadas
+const projetosComTarefas = [
+    {
+        nome: "Website",
+        tarefas: [
+            { titulo: "Design", concluida: true },
+            { titulo: "HTML", concluida: true },
+            { titulo: "CSS", concluida: false }
+        ]
+    },
+    {
+        nome: "API",
+        tarefas: [
+            { titulo: "Modelagem", concluida: true },
+            { titulo: "Rotas", concluida: false }
+        ]
+    }
+];
+
+// Extrair todas as tarefas em um único array com loops aninhados
+console.log("\nExtraindo todas as tarefas com loops aninhados:");
+const todasTarefasTradicional = [];
+for (let i = 0; i < projetosComTarefas.length; i++) {
+    for (let j = 0; j < projetosComTarefas[i].tarefas.length; j++) {
+        todasTarefasTradicional.push(projetosComTarefas[i].tarefas[j]);
+    }
+}
+console.log(`Total de tarefas: ${todasTarefasTradicional.length}`);
+
+// Com flatMap (mapeia cada elemento para um array e depois achata o resultado)
+console.log("\nExtraindo todas as tarefas com flatMap:");
+const todasTarefas = projetosComTarefas.flatMap(projeto => projeto.tarefas);
+console.log(`Total de tarefas: ${todasTarefas.length}`);
+console.log("Títulos:", todasTarefas.map(t => t.titulo));
+
+// ----- Encadeamento de métodos -----
+console.log("\n---- Encadeamento de métodos ----");
+
+// Encontrar títulos das tarefas de alta prioridade não concluídas
+console.log("\nTítulos das tarefas de alta prioridade não concluídas:");
+
+// Com loops tradicionais
+const tarefasAltaPendentesTradicional = [];
+for (let i = 0; i < tarefas.length; i++) {
+    if (tarefas[i].prioridade === "alta" && !tarefas[i].concluida) {
+        tarefasAltaPendentesTradicional.push(tarefas[i].titulo);
+    }
+}
+console.log("Com loops tradicionais:", tarefasAltaPendentesTradicional);
+
+// Com métodos encadeados
+const tarefasAltaPendentes = tarefas
+    .filter(tarefa => tarefa.prioridade === "alta" && !tarefa.concluida)
+    .map(tarefa => tarefa.titulo);
+console.log("Com métodos encadeados:", tarefasAltaPendentes);
+
+// Exemplo mais complexo: estatísticas de conclusão por prioridade
+console.log("\nEstatísticas de conclusão por prioridade:");
+
+// Usando métodos encadeados
+const estatisticasPorPrioridade = Object.fromEntries(
+    // Primeiro, agrupamos por prioridade
+    Object.entries(
+        tarefas.reduce((acc, tarefa) => {
+            // Se o acumulador ainda não tem esta prioridade, inicializamos
+            if (!acc[tarefa.prioridade]) {
+                acc[tarefa.prioridade] = { total: 0, concluidas: 0 };
+            }
+
+            // Incrementamos os contadores
+            acc[tarefa.prioridade].total++;
+            if (tarefa.concluida) {
+                acc[tarefa.prioridade].concluidas++;
+            }
+
+            return acc;
+        }, {})
+    ).map(([prioridade, stats]) => [
+        prioridade,
+        {
+            ...stats,
+            percentualConcluido: (stats.concluidas / stats.total) * 100
+        }
+    ])
+);
+
+console.log(estatisticasPorPrioridade);
+
+// ----- Comparação de desempenho -----
+console.log("\n---- Por que usar métodos modernos de array? ----");
+
+console.log(`
+Vantagens dos métodos modernos de array:
+
+1. Código mais declarativo: expressa "o que" fazer em vez de "como" fazer
+2. Maior legibilidade: intenção do código fica mais clara
+3. Menos código boilerplate: menos variáveis temporárias e índices para gerenciar
+4. Imutabilidade: os métodos retornam novos arrays em vez de modificar o original
+5. Encadeamento: facilidade para combinar operações sequenciais
+6. Menos erros: evita problemas comuns de loops como off-by-one errors
+7. Consistência funcional: assinatura padronizada (elemento, índice, array)
+
+Quando usar loops tradicionais:
+1. Ao precisar de break/continue para controle explícito do fluxo
+2. Em casos específicos de performance com arrays muito grandes
+3. Ao precisar modificar o array original durante a iteração
+4. Em loops complexos não lineares (pular elementos, etc.)
+`);
+
+// ----- Exercícios para os alunos -----
 /*
 EXERCÍCIO 1:
-Use um loop for para exibir os números de 1 a 10.
+Reescreva a função somarArray do exercício 5 original usando reduce.
 
 Resolução:
-function exibirNumeros1a10() {
-    for (let i = 1; i <= 10; i++) {
-        console.log(i);
-    }
+function somarArray(numeros) {
+    return numeros.reduce((soma, numero) => soma + numero, 0);
 }
 
-console.log("Números de 1 a 10:");
-exibirNumeros1a10();
+const meusNumeros = [10, 20, 30, 40, 50];
+console.log("Soma dos números:", somarArray(meusNumeros)); // 150
 */
 
 /*
 EXERCÍCIO 2:
-Crie um array com 5 frutas e use um loop for para exibir cada uma.
+Use filter e map para criar uma lista formatada apenas das tarefas concluídas.
 
 Resolução:
-function exibirFrutas() {
-    const frutas = ["Maçã", "Banana", "Laranja", "Morango", "Uva"];
-    
-    for (let i = 0; i < frutas.length; i++) {
-        console.log(`Fruta ${i + 1}: ${frutas[i]}`);
-    }
+function listarTarefasConcluidas(tarefas) {
+    return tarefas
+        .filter(tarefa => tarefa.concluida)
+        .map(tarefa => `[✓] ${tarefa.titulo} (${tarefa.prioridade})`);
 }
 
-console.log("\nLista de frutas:");
-exibirFrutas();
+console.log("Tarefas concluídas:", listarTarefasConcluidas(tarefas));
 */
 
 /*
 EXERCÍCIO 3:
-Use um loop while para fazer uma contagem regressiva de 10 a 1.
-
-Resolução:
-function contagemRegressiva() {
-    let contador = 10;
-    
-    while (contador >= 1) {
-        console.log(contador);
-        contador--;
-    }
-}
-
-console.log("\nContagem regressiva de 10 a 1:");
-contagemRegressiva();
-*/
-
-/*
-EXERCÍCIO 4:
-Crie um loop que exiba apenas os números pares de 0 a 20.
-
-Resolução:
-function exibirNumerosPares() {
-    // Usando for
-    for (let i = 0; i <= 20; i += 2) {
-        console.log(i);
-    }
-    
-    // Alternativa com verificação de paridade
-    // for (let i = 0; i <= 20; i++) {
-    //     if (i % 2 === 0) {
-    //         console.log(i);
-    //     }
-    // }
-}
-
-console.log("\nNúmeros pares de 0 a 20:");
-exibirNumerosPares();
-*/
-
-/*
-EXERCÍCIO 5:
-Crie uma função que receba um array de números e retorne a soma de todos eles usando um loop.
-
-Resolução:
-function somarArray(numeros) {
-    let soma = 0;
-    
-    for (let i = 0; i < numeros.length; i++) {
-        soma += numeros[i];
-    }
-    
-    return soma;
-}
-
-const meusNumeros = [10, 20, 30, 40, 50];
-console.log("\nSoma dos números:", somarArray(meusNumeros)); // 150
-*/
-
-/*
-EXERCÍCIO 6:
-Crie uma função que percorra um objeto e liste todas as suas propriedades e valores.
-
-Resolução:
-function listarPropriedades(objeto) {
-    for (let propriedade in objeto) {
-        console.log(`${propriedade}: ${objeto[propriedade]}`);
-    }
-}
-
-const minhaTarefa = {
-    id: 1,
-    titulo: "Estudar loops",
-    prioridade: "alta",
-    concluida: false
-};
-
-console.log("\nPropriedades da tarefa:");
-listarPropriedades(minhaTarefa);
-*/
-
-/*
-EXERCÍCIO 7:
-Use um loop para encontrar um número específico em um array. Se encontrar, exiba a posição. Caso contrário, exiba uma mensagem informando que não foi encontrado.
+Reescreva a função encontrarNumero do exercício 7 original usando findIndex.
 
 Resolução:
 function encontrarNumero(array, numero) {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] === numero) {
-            return `Número ${numero} encontrado na posição ${i}`;
-        }
-    }
-    
-    return `Número ${numero} não encontrado no array`;
+    const indice = array.findIndex(item => item === numero);
+    return indice !== -1
+        ? `Número ${numero} encontrado na posição ${indice}`
+        : `Número ${numero} não encontrado no array`;
 }
 
 const numeros = [5, 8, 12, 3, 7, 9, 15];
-console.log("\nBuscando números:");
 console.log(encontrarNumero(numeros, 7));  // Encontrado na posição 4
 console.log(encontrarNumero(numeros, 10)); // Não encontrado
 */
 
 /*
-EXERCÍCIO 8:
-Crie uma função que conte quantas tarefas de um array estão concluídas.
+EXERCÍCIO 4:
+Use flatMap para criar um array com todas as palavras de um array de frases.
 
 Resolução:
-function contarTarefasConcluidas(tarefas) {
-    let contador = 0;
-    
-    for (let i = 0; i < tarefas.length; i++) {
-        if (tarefas[i].concluida) {
-            contador++;
-        }
-    }
-    
-    return contador;
+function extrairPalavras(frases) {
+    return frases.flatMap(frase => frase.split(' '));
 }
 
-const minhasTarefas = [
-    { titulo: "Tarefa 1", concluida: true },
-    { titulo: "Tarefa 2", concluida: false },
-    { titulo: "Tarefa 3", concluida: true },
-    { titulo: "Tarefa 4", concluida: false },
-    { titulo: "Tarefa 5", concluida: true }
+const frases = [
+    "JavaScript é incrível",
+    "Métodos de array são poderosos",
+    "Programação funcional é elegante"
 ];
 
-console.log("\nTotal de tarefas concluídas:", contarTarefasConcluidas(minhasTarefas)); // 3
+console.log("Palavras extraídas:", extrairPalavras(frases));
 */
